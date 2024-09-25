@@ -804,18 +804,17 @@ set "ASKUPDATE=ASKUPDATE.bat"
 :: Check for Update
 set "CHECKFORUPDATE=CHECKFORUPDATE.bat"
 (
-    set "UPDTGHURL=https://raw.githubusercontent.com/Niemandausduisburg"
-	set "UPDTGHREPO=untreble"
-	set "UPDTGHDLURL=refs/heads"
-	set "UPDTGHBRANCH=main"
-	set "UPDTGHFILE=revert.bat"
 	echo call %%LOGO%%
 	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Check for updates' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
-	echo curl -L --connect-timeout 10 %%UPDTGHDLURL%%/%%UPDTGHREPO%%/%%UPDTGHDLURL%%/%%UPDTGHBRANCH%%/%%UPDTGHFILE%% \
-	echo --output temp.bat
+	echo set "UPDTGHURL=https://raw.githubusercontent.com/Niemandausduisburg"
+	echo set "UPDTGHREPO=untreble"
+	echo set "UPDTGHDLURL=refs/heads"
+	echo set "UPDTGHBRANCH=main"
+	echo set "UPDTGHFILE=revert.bat"
+	echo curl -L --connect-timeout 10 %%UPDTGHURL%%/%%UPDTGHREPO%%/%%UPDTGHDLURL%%/%%UPDTGHBRANCH%%/%%UPDTGHFILE%% --output temp.bat
 	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 'revert.bat' | Select-Object -ExpandProperty Hash"`^) do set REVERTOLD=%%%%A
 	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 'temp.bat' | Select-Object -ExpandProperty Hash"`^) do set REVERTNEW=%%%%A
 	echo setlocal enabledelayedexpansion
@@ -906,16 +905,15 @@ if "%askuserupdate%" == "1" (
 call %CHECKFORUPDATE%
 ) else if "%askuserupdate%" == "2" (
 call %SELCECTNOUPDATE%
-) else (
-call %ABORTSCRIPT%
 )
 
 :: Ask for Update 
 if "%askuserforupdate%" == "1" (
-if not "%REVERTOLD%" == "%REVERTNEW% (
-call %ASKFORUPDATE%
-) else if "%REVERTOLD%" == "%REVERTNEW% (
-call %NOUPDATEFOUND%
+    if not "%REVERTOLD%" == "%REVERTNEW%" (
+        call %ASKFORUPDATE%
+    ) else (
+        call %NOUPDATEFOUND%
+    )
 )
 choice /n /c:12 %1
 if errorlevel 1 set "askuserforupdate=1"
@@ -923,11 +921,9 @@ if errorlevel 2 set "askuserforupdate=2"
 
 :: Update T-Virus
 if "%askuserforupdate%" == "1" (
-call %UPDATE%
+    call %UPDATE%
 ) else if "%askuserforupdate%" == "2" (
-call %SELCECTNOUPDATE%
-) else (
-call %ABORTSCRIPT%
+    call %SELCECTNOUPDATE%
 )
 
 :: Check architecture
