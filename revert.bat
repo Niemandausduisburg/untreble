@@ -13,7 +13,8 @@ cls
 :: Windows size
 REM mode con: cols=105 lines=30
 
-
+echo UPDATED Script
+pause
 
 :: LOGOS
 :: T-Virus Logo
