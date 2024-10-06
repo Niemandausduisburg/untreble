@@ -881,7 +881,8 @@ call %SELCECTNOUPDATE%
 )
 
 :: Ask for Update
-if not "%%REVERTOLD%%" == "%%REVERTNEW%%" (
+
+if not "%REVERTOLD%" == "%REVERTNEW%" (
 call %ASKFORUPDATE%
 choice /n /c:12 %1
 if errorlevel 1 set "askuserupdate=1"
