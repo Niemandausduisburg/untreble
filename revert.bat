@@ -11,16 +11,15 @@ cls
 :: Not needed in PowerShell :-)
 
 :: Windows size
+:: Not working :-(
 REM mode con: cols=105 lines=30
-
-echo UPDATED Script
-pause
 
 :: LOGOS
 :: T-Virus Logo
 set "LOGO=LOGO.bat"
 (
 	echo cls
+	echo setlocal enabledelayedexpansion
 	echo set "logo1=___________     ____   ____.__                      ________     _______   "
 	echo set "logo2=\__    ___/     \   \ /   /|__|______ __ __  ______ \_____  \    \   _  \  "
 	echo set "logo3=  |    |  ______ \   Y   / |  \_  __ \  |  \/  ___/   _(__  <    /  /_\  \ "
@@ -28,11 +27,13 @@ set "LOGO=LOGO.bat"
 	echo set "logo5=  |____|           \___/   |__||__|  |____//____  > /______  / /\ \_____  /"
 	echo set "logo6=                                                \/         \/  \/       \/ "
 	echo for %%%%T in ^(logo1 logo2 logo3 logo4 logo5 logo6^) do ^(powershell -command "& {Write-Host '!%%%%T!' -ForegroundColor Magenta -BackgroundColor White}"^)
+	echo endlocal
 ) > "%LOGO%"
-	
+
 set "NOKIALOGO=NOKIALOGO.bat"
 (	
 	echo cls
+	echo setlocal enabledelayedexpansion
 	echo set "nokia1=░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓██████▓▒░ " 
 	echo set "nokia2=░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░" 
 	echo set "nokia3=░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░" 
@@ -41,6 +42,7 @@ set "NOKIALOGO=NOKIALOGO.bat"
 	echo set "nokia6=░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░" 
 	echo set "nokia7=░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░"
 	echo for %%%%N in ^(nokia1 nokia2 nokia3 nokia4 nokia5 nokia6 nokia7^) do ^(powershell -command "& {Write-Host '!%%%%N!' -ForegroundColor Magenta -BackgroundColor White}"^)
+	echo endlocal
 ) > "%NOKIALOGO%"
 
 :: T-Virus-Github-Repo
@@ -573,9 +575,7 @@ set "REBOOT_BOOTLOADER=REBOOT_BOOTLOADER.bat"
 	echo @echo off    
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host 'Rebooting device into download mode. DO NOT disconnect your device!' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% reboot bootloader)"
 	echo timeout /t 5
 ) > "%REBOOT_BOOTLOADER%"
@@ -586,9 +586,7 @@ set "REBOOT_SYSTEM=REBOOT_SYSTEM.bat"
 	echo @echo off    
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host 'Rebooting device into system. DO NOT disconnect your device!' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% reboot)"
 	echo timeout /t 5
 ) > "%REBOOT_SYSTEM%"
@@ -644,42 +642,35 @@ set "WARNINGSCREEN1=WARNINGSCREEN1.bat"
 	echo if "%%FLASHMODE%%" == "Stock" ^(
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'MAKE A BACKUP FROM YOUR DATA!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 10
 	echo ^) else if "%%FLASHMODE%%" == "GPT" ^(
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'MAKE A BACKUP FROM YOUR DATA!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 10
 	echo ^)
 ) > "%WARNINGSCREEN1%"
-	
+
 :: Warning Screen 2
 set "WARNINGSCREEN2=WARNINGSCREEN2.bat"
 (
 	echo if "%%FLASHMODE%%" == "Stock" ^(
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'FLASHING SOME PARTITIONS CAN TAKE SOME TIME (ABOUT 5 MINUTES).' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'DO NOT UNPLUG THE USB-CABLE OR CLOSE CMD OR YOU WILL BRICK YOUR DEVICE!!!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'SOMETIMES CMD SEEMS TO BE FREZZING. DO NOT ABORT THE PROCESS AND STILL WAITING UNTIL THE PROCESS IS DONE.' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 10
 	echo ^)
 ) > "%WARNINGSCREEN2%"
-
 
 :: Ask for flash Stock
 set "ASKFORSTOCK=ASKFORSTOCK.bat"
@@ -721,18 +712,14 @@ set "INSTRUCTION=INSTRUCTION.bat"
 set "LASTWARNINGSTOCK=LASTWARNINGSTOCK.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'ATTENTION!!!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'THE WHOLE FLASHING PROCESS CAN TAKE UP TO 10 MINUTES.' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'LEAN BACK AND LET IT FLASHING.' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 10
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Let''s flash and revert back to Stock-ROM :-)' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 5
 ) >"%LASTWARNINGSTOCK%"
 
@@ -740,13 +727,11 @@ set "LASTWARNINGSTOCK=LASTWARNINGSTOCK.bat"
 set "LASTWARNINGGPT=LASTWARNINGGPT.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Let''s flash and revert back to Stock-GPT-Table :-)' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 5
 ) >"%LASTWARNINGGPT%"
-	
+
 :: Well done
 set "WELLDONE=WELLDONE.bat"
 (
@@ -760,14 +745,12 @@ set "WELLDONE=WELLDONE.bat"
 set "FINISHSTOCK=FINISHSTOCK.bat"
 (
 	echo call %%NOKIALOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'You are back to Stock ROM successfully.' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Your device will boot into the ROM now.' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Enjoy your time travel to the ancient times xD' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'You can unplug your device now :-)' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 10
 	echo cls
 	echo color 0F
@@ -778,13 +761,11 @@ set "FINISHSTOCK=FINISHSTOCK.bat"
 set "FINISHGPT=FINISHGPT.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Partition-Table successfully flashed :-)' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'You need to flash a Stock-Firmware with NOST or OST LA to boot your device!!!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'I don''t recommend using OSTRemote or it will destroy your device :-(' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 10
 	echo cls
 	echo color 0F
@@ -795,10 +776,8 @@ set "FINISHGPT=FINISHGPT.bat"
 set "ASKUPDATE=ASKUPDATE.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Do you want to check for updates?' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo call %%YESNO%%
 ) >"%ASKUPDATE%"
 
@@ -806,7 +785,6 @@ set "ASKUPDATE=ASKUPDATE.bat"
 set "CHECKFORUPDATE=CHECKFORUPDATE.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Check for updates' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
@@ -816,19 +794,22 @@ set "CHECKFORUPDATE=CHECKFORUPDATE.bat"
 	echo set "UPDTGHBRANCH=main"
 	echo set "UPDTGHFILE=revert.bat"
 	echo curl -L --connect-timeout 10 %%UPDTGHURL%%/%%UPDTGHREPO%%/%%UPDTGHDLURL%%/%%UPDTGHBRANCH%%/%%UPDTGHFILE%% --output temp.bat
+) >"%CHECKFORUPDATE%"
+
+:: Compare Scripts
+set "COMPAREUPDATE=COMPAREUPDATE.bat"
+(
 	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 'revert.bat' | Select-Object -ExpandProperty Hash"`^) do set REVERTOLD=%%%%A
 	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 'temp.bat' | Select-Object -ExpandProperty Hash"`^) do set REVERTNEW=%%%%A
-	echo setlocal enabledelayedexpansion
-) >"%CHECKFORUPDATE%"
+	echo pause
+) >"%COMPAREUPDATE%"
 
 :: Ask for Update
 set "ASKFORUPDATE=ASKFORUPDATE.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Do you want update?' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo call %%YESNO%%
 ) >"%ASKFORUPDATE%"
 
@@ -836,12 +817,10 @@ set "ASKFORUPDATE=ASKFORUPDATE.bat"
 set "AFTERUPDATE=AFTERUPDATE.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Update successfully :-)' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'T-Virus will restart now.' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 5
 ) >"%AFTERUPDATE%"
 
@@ -849,12 +828,10 @@ set "AFTERUPDATE=AFTERUPDATE.bat"
 set "SELCECTNOUPDATE=SELCECTNOUPDATE.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Don''t cry when something is not working.' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Joke xD' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'When something is not working check for Updates.' -ForegroundColor Red -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 5
 ) >"%SELCECTNOUPDATE%"
 
@@ -862,12 +839,10 @@ set "SELCECTNOUPDATE=SELCECTNOUPDATE.bat"
 set "NOUPDATEFOUND=NOUPDATEFOUND.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'T-Virus is already up-to-date :-)' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'T-Virus will continue now.' -ForegroundColor Black -BackgroundColor White}"
-	echo setlocal enabledelayedexpansion
 	echo timeout /t 5
 ) >"%NOUPDATEFOUND%"
 
@@ -875,15 +850,12 @@ set "NOUPDATEFOUND=NOUPDATEFOUND.bat"
 set "UPDATE=UPDATE.bat"
 (
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Update T-Virus...' -ForegroundColor Red -BackgroundColor White}"
 	echo timeout /t 5
 	echo rm revert.bat
 	echo ren temp.bat revert.bat
-	echo setlocal enabledelayedexpansion
 	echo call %%LOGO%%
-	echo setlocal DisableDelayedExpansion
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Update done :-)' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'T-Virus will restart now' -ForegroundColor Red -BackgroundColor White}"
@@ -894,81 +866,32 @@ set "UPDATE=UPDATE.bat"
 ::-------------------------------------------------------------------------------------------------------------------------------------	
 :: Start T-Virus
 :: Prepare
-setlocal enabledelayedexpansion
 
 :: Ask for checking for Update
 call %ASKUPDATE%
 choice /n /c:12 %1
-if errorlevel 1 set "askuserupdate=1"
-if errorlevel 2 set "askuserupdate=2"
+if errorlevel 1 set "askusertoupdate=1"
+if errorlevel 2 set "askusertoupdate=2"
 
-if "%askuserupdate%" == "1" (
+if "%askusertoupdate%" == "1" (
 call %CHECKFORUPDATE%
-) else if "%askuserupdate%" == "2" (
+call %COMPAREUPDATE%
+) else if "%askusertoupdate%" == "2" (
 call %SELCECTNOUPDATE%
 )
 
-:: Ask for Update 
-if "%askuserforupdate%" == "1" (
-    if not "%REVERTOLD%" == "%REVERTNEW%" (
-        call %ASKFORUPDATE%
-    ) else (
-        call %NOUPDATEFOUND%
-    )
-)
+:: Ask for Update
+if not "%%REVERTOLD%%" == "%%REVERTNEW%%" (
+call %ASKFORUPDATE%
 choice /n /c:12 %1
-if errorlevel 1 set "askuserforupdate=1"
-if errorlevel 2 set "askuserforupdate=2"
-
-:: Update T-Virus
-if "%askuserforupdate%" == "1" (
-    call %UPDATE%
-) else if "%askuserforupdate%" == "2" (
-    call %SELCECTNOUPDATE%
+if errorlevel 1 set "askuserupdate=1"
+if errorlevel 2 set "askuserupdate=2"
+) else (
+call %NOUPDATEFOUND%
 )
 
-:: Check architecture
-if "%CHECKARCH%" == "%ISARCH%" (
-timeout /t 0
-) else if not "%CHECKARCH%" == "%ISARCH%" (
-call %WRONGARCHITECTURE%
+if "%askuserupdate%" == "1" (
+call %Update%
+) else (
+call %SELCECTNOUPDATE%
 )
-
-
-:: Check if Android-SDK-Platform-Tools are installed
-call %ADBTOOLS%
-call %CHECKADBTOOLS%
-
-if "%FASTBOOTNEEDED%" == "yes" (
-call %NOSDK%
-choice /n /c:12 %1
-if errorlevel 1 set "adbquestion=1"
-if errorlevel 2 set "adbquestion=2"
-)
-
-
- 
-
-:: Check which package manager is used
-:: Which package mager ??? xD 
-
-:: Check which Windows version
-:: Check which Windows version
-if "%FASTBOOTNEEDED%" == "yes" (
-    if "%adbquestion%" == "1" (
-        cls
-        echo Call WINVER
-        call %CHECKWINVER%
-    ) else (
-        if "%adbquestion%" == "2" (
-            echo Dont Call WINVER
-            pause
-            call %ABORTSCRIPT%
-        ) else (
-            echo Dont Call WINVER
-            pause
-            call %ABORTSCRIPT%
-        )
-    )
-)
-
