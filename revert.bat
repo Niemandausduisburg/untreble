@@ -801,7 +801,6 @@ set "COMPAREUPDATE=COMPAREUPDATE.bat"
 (
 	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 'revert.bat' | Select-Object -ExpandProperty Hash"`^) do set REVERTOLD=%%%%A
 	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 'temp.bat' | Select-Object -ExpandProperty Hash"`^) do set REVERTNEW=%%%%A
-	echo pause
 ) >"%COMPAREUPDATE%"
 
 :: Ask for Update
@@ -881,6 +880,9 @@ call %SELCECTNOUPDATE%
 )
 
 :: Ask for Update
+echo %REVERTNEW%
+echo %REVERTOLD%
+pause
 
 if not "%REVERTOLD%" == "%REVERTNEW%" (
 call %ASKFORUPDATE%
