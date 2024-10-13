@@ -47,17 +47,21 @@ set "NOKIALOGO=NOKIALOGO.bat"
 
 :: T-Virus-Github-Repo
 set "TGHURL=https://github.com/Niemandausduisburg"
-set "TGHREPO=t-virus-3.0"
+set "TGHRAWURL=https://raw.githubusercontent.com/Niemandausduisburg"
+set "TGHREPO=untreble"
+set "TGHUPDURL=refs/heads"
 set "TGHDLURL=releases/download"
-set "TGHTAG=tvirus3.0-NB1-files"
+set "TGHTAG=untreble-needed-files"
+set "TGHBRANCH=main"
+set "TGHUPDFILE=revert.bat"
 
 :: Exit Script Variable
 set "ABORTSCRIPT=ABORTSCRIPT.bat"
 (
     echo @echo off
 	echo color 0F
-    echo cls
-    echo exit 1
+	echo cls
+	echo call %%CLEANUP%% ^&^& exit 1
 ) > "%ABORTSCRIPT%"
 
 :: Check architecture
@@ -73,12 +77,7 @@ set "ISARCH=64-bit"
 set "CHECKWINVER=CHECKWINVER.bat"
 (
 	echo for /f "delims=" %%%%A in ^('powershell -command "[System.Environment]::OSVersion.Version.Major"'^) do ^(
-    echo set "CHECKWINVER=%%%%A"
-	echo ^)
-	echo if "%%CHECKWINVER%%"=="6" ^(
-	echo set "WINVER=6"
-	echo ^) else if "%%CHECKWINVER%%"=="10" ^(
-	echo set "WINVER=10"
+	echo 	set "WINVER=%%%%A" 
 	echo ^)
 ) > "%CHECKWINVER%"
 
@@ -102,64 +101,72 @@ set "CHECKADBTOOLS=CHECKADBTOOLS.bat"
 	echo 		set "FASTBOOTNEEDED=no"
 	echo 	^) else ^(
 	echo			set "FASTBOOTNEEDED=yes"
-	echo		^)
+	echo	^)
 	echo ^) else ^(
 	echo 	set "FASTBOOTNEEDED=yes"
 	echo ^)
+	echo timeout /t 3
 ) > "%CHECKADBTOOLS%"
 
 :: Stockimages
-set "ABL=ROM/abl.elf"
-set "BOOT=ROM/boot.img"
-set "BOX=ROM/box.bin"
-set "CDA=ROM/cda.img"
-set "DSP=ROM/dsp.bin"
-set "ELABEL=ROM/elabel.bin"
-set "GPT0=ROM/gpt_both0.bin"
-set "HIDDEN=ROM/hidden.img"
-set "KEYSTORE=ROM/keystore.bin"
-set "LOGDUMP=ROM/logdump.bin"
-set "MISC=ROM/misc.bin"
-set "MODEM=ROM/modem.bin"
-set "PERSIST=ROM/persist.img"
-set "SPLASH2=ROM/splash2.img"
-set "SSD=ROM/ssd.bin"
-set "SUTINFO=ROM/sutinfo.img"
-set "SYSTEM=ROM/system.img"
-set "SYSTEMOTHER=ROM/system_other.img"
-set "SYSTEMINFO=ROM/systeminfo.img"
-set "XBL=ROM/xbl.elf"
+set "STOCKIMAGES=STOCKIMAGES.bat"
+(
+echo set "ABL=ROM/abl.elf"
+echo set "BOOT=ROM/boot.img"
+echo set "BOX=ROM/box.bin"
+echo set "CDA=ROM/cda.img"
+echo set "DSP=ROM/dsp.bin"
+echo set "ELABEL=ROM/elabel.bin"
+echo set "GPT0=ROM/gpt_both0.bin"
+echo set "HIDDEN=ROM/hidden.img"
+echo set "KEYSTORE=ROM/keystore.bin"
+echo set "LOGDUMP=ROM/logdump.bin"
+echo set "MISC=ROM/misc.bin"
+echo set "MODEM=ROM/modem.bin"
+echo set "PERSIST=ROM/persist.img"
+echo set "SPLASH2=ROM/splash2.img"
+echo set "SSD=ROM/ssd.bin"
+echo set "SUTINFO=ROM/sutinfo.img"
+echo set "SYSTEM=ROM/system.img"
+echo set "SYSTEMOTHER=ROM/system_other.img"
+echo set "SYSTEMINFO=ROM/systeminfo.img"
+echo set "XBL=ROM/xbl.elf"
+) > "%STOCKIMAGES%" 
 
 :: GPT
 :: Should
-set "GPTSTOCK=ROM/gpt_both0.bin"
+set "GPT0=ROM/gpt_both0.bin"
 :: Get
-set "GETGPTSTOCK=if exist "ROM/gpt_both0.bin"
+set "GETGPTSTOCK=GETGPTSTOCK.bat"
+(
+	echo @echo off
+	echo if exist "%%GPT0%%" set "GPTSTOCK=ROM/gpt_both0.bin"
+) > "%GETGPTSTOCK%"
 
 :: Stockimages destinations
 set "CHECKSTOCKIMAGES=CHECKSTOCKIMAGES.bat"
 (
 	echo @echo off
-	echo if exist "ROM/abl.elf" set "GETABL=ROM/abl.elf"
-	echo if exist "ROM/boot.img" set "GETBOOT=ROM/boot.img"
-	echo if exist "ROM/box.bin" set "GETBOX=ROM/box.bin"
-	echo if exist "ROM/cda.img" set "GETCDA=ROM/cda.img"
-	echo if exist "ROM/dsp.bin" set "GETDSP=ROM/dsp.bin"
-	echo if exist "ROM/elabel.bin" set "GETELABEL=ROM/elabel.bin"
-	echo if exist "ROM/gpt_both0.bin" set "GETGPT0=ROM/gpt_both0.bin"
-	echo if exist "ROM/hidden.img" set "GETHIDDEN=ROM/hidden.img"
-	echo if exist "ROM/keystore.bin" set "GETKEYSTORE=ROM/keystore.bin"
-	echo if exist "ROM/logdump.bin" set "GETLOGDUMP=ROM/logdump.bin"
-	echo if exist "ROM/misc.bin" set "GETMISC=ROM/misc.bin"
-	echo if exist "ROM/modem.bin" set "GETMODEM=ROM/modem.bin"
-	echo if exist "ROM/persist.img" set "GETPERSIST=ROM/persist.img"
-	echo if exist "ROM/splash2.img" set "GETSPLASH2=ROM/splash2.img"
-	echo if exist "ROM/ssd.bin" set "GETSSD=ROM/ssd.bin"
-	echo if exist "ROM/sutinfo.img" set "GETSUTINFO=ROM/sutinfo.img"
-	echo if exist "ROM/system.img" set "GETSYSTEM=ROM/system.img"
-	echo if exist "ROM/system_other.img" set "GETSYSTEMOTHER=ROM/system_other.img"
-	echo if exist "ROM/systeminfo.img" set "GETSYSTEMINFO=ROM/systeminfo.img"
-	echo if exist "ROM/xbl.elf" set "GETXBL=ROM/xbl.elf"
+	echo if exist "%%ABL%%" set "GETABL=ROM/abl.elf"
+	echo if exist "%%BOOT%%" set "GETBOOT=ROM/boot.img"
+	echo if exist "%%BOX%%" set "GETBOX=ROM/box.bin"
+	echo if exist "%%CDA%%" set "GETCDA=ROM/cda.img"
+	echo if exist "%%DSP%%" set "GETDSP=ROM/dsp.bin"
+	echo if exist "%%ELABEL%%" set "GETELABEL=ROM/elabel.bin"
+	echo if exist "%%GPT0%%" set "GETGPT0=ROM/gpt_both0.bin"
+	echo if exist "%%HIDDEN%%" set "GETHIDDEN=ROM/hidden.img"
+	echo if exist "%%KEYSTORE%%" set "GETKEYSTORE=ROM/keystore.bin"
+	echo if exist "%%LOGDUMP%%" set "GETLOGDUMP=ROM/logdump.bin"
+	echo if exist "%%MISC%%" set "GETMISC=ROM/misc.bin"
+	echo if exist "%%MODEM%%" set "GETMODEM=ROM/modem.bin"
+	echo if exist "%%PERSIST%%" set "GETPERSIST=ROM/persist.img"
+	echo if exist "%%SPLASH2%%" set "GETSPLASH2=ROM/splash2.img"
+	echo if exist "%%SSD%%" set "GETSSD=ROM/ssd.bin"
+	echo if exist "%%SUTINFO%%" set "GETSUTINFO=ROM/sutinfo.img"
+	echo if exist "%%SYSTEM%%" set "GETSYSTEM=ROM/system.img"
+	echo if exist "%%SYSTEMOTHER%%" set "GETSYSTEMOTHER=ROM/system_other.img"
+	echo if exist "%%SYSTEMINFO%%" set "GETSYSTEMINFO=ROM/systeminfo.img"
+	echo if exist "%%XBL%%" set "GETXBL=ROM/xbl.elf"
 ) > "%CHECKSTOCKIMAGES%"
 
 :: Stockimages SHA256Sums
@@ -188,48 +195,50 @@ set "SHA256SUMXBL=A5328530F2F26F556844A6B8DFCF02FED6FA3BA4B9357A55CFD474FB2C0DDF
 set "STOCKGETSHA=STOCKGETSHA.bat"
 (
 	echo @echo off
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%ABL%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMABL=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%BOOT%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMBOOT=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%BOX%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMBOX=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%CDA%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMCDA=%%%%A
-    echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%DSP%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMDSP=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%ELABEL%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMELABEL=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%GPT0%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMGPT0=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%HIDDEN%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMHIDDEN=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%KEYSTORE%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMKEYSTORE=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%LOGDUMP%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMLOGDUMP=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%MISC%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMMISC=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%MODEM%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMMODEM=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%PERSIST%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMPERSIST=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SPLASH2%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSPLASH2=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SSD%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSSD=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SUTINFO%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSUTINFO=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SYSTEM%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSYSTEM=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SYSTEMOTHER%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSYSTEMOTHER=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SYSTEMINFO%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSYSTEMINFO=%%%%A
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%XBL%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMXBL=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%ABL%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMABL=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%BOOT%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMBOOT=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%BOX%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMBOX=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%CDA%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMCDA=%%%%A
+    echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%DSP%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMDSP=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%ELABEL%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMELABEL=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%GPT0%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMGPT0=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%HIDDEN%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMHIDDEN=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%KEYSTORE%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMKEYSTORE=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%LOGDUMP%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMLOGDUMP=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%MISC%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMMISC=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%MODEM%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMMODEM=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%PERSIST%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMPERSIST=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%SPLASH2%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSPLASH2=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%SSD%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSSD=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%SUTINFO%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSUTINFO=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%SYSTEM%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSYSTEM=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%SYSTEMOTHER%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSYSTEMOTHER=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%SYSTEMINFO%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMSYSTEMINFO=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%XBL%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMXBL=%%%%A
 ) > "%STOCKGETSHA%"
 
 :: StockGPT get SHA256SUM
 set "STOCKGPTGETSHA=STOCKGPTGETSHA.bat"
 (
 	echo @echo off
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%GPT0%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMGPT0=%%%%A
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%%GPT0%%' | Select-Object -ExpandProperty Hash"`^) do set GETSHA256SUMGPT0=%%%%A
 ) > "%STOCKGPTGETSHA%"
 
 :: Check 7Zip Version
-set "ZIP7ZIPSHA=de46f5ce87c3733bde1236b9f40171cd16dbbb37f234034540c9fb0311c442af"
-set "Z7ZIPSHA=Z7ZIPSHA.bat"
+set "ZIP7ZIPSHA=707F415D7D581EDD9BCE99A0429AD4629D3BE0316C329E8B9EBD576F7AB50B71"
+set "ZIP7ZIPCHECKSHA=ZIP7ZIPCHECKSHA.bat"
 (
-	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '7zip/7z.exe' | Select-Object -ExpandProperty Hash"`^) do set ZIP7ZIPCHECKSHA=%%%%A
-) > "%Z7ZIPSHA%"
+	echo @echo off
+	echo for /f "usebackq" %%%%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '7zip/7z.exe' | Select-Object -ExpandProperty Hash"`^) do set Z7ZIPCHECKSHA=%%%%A
+) > "%ZIP7ZIPCHECKSHA%"
 
 set "CHECK7ZIP=CHECK7ZIP.bat"
 (
-	echo if "%%ZIP7ZIPSHA%%" == "%%ZIP7ZIPCHECKSHA%%" (
-    echo set "ZIP7ZIPNEEDED=no"
+	echo @echo off
+	echo if "%%ZIP7ZIPSHA%%" == "%%Z7ZIPCHECKSHA%%" (
+    echo 	set "ZIP7ZIPNEEDED=no"
 	echo ^) else ^(
-    echo set "ZIP7ZIPNEEDED=yes"
+    echo 	set "ZIP7ZIPNEEDED=yes"
 	echo ^)
 ) > "%CHECK7ZIP%"
 
@@ -355,14 +364,20 @@ set "SDKZIP=platform-tools_r35.0.2-windows.zip"
 set "SDKMESSAGE=SDKMESSAGE.bat"
 (
 	echo @echo off
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
-	echo if "%%WINVER%%" == "%%CHECKWINVER%%" (
-	echo powershell -command "& {Write-Host 'It will download and install Android-SDK-Platform-Tools ("%%SDKSIZE%%")' -ForegroundColor Red -BackgroundColor White}"
-	echo call %%CONTINUE%%
-	echo call %%YESNO%%
+	echo if "%%WINVER%%" == "10" ^(
+	echo 	call %%LOGO%%
+	echo 	powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'It will download and install Android-SDK-Platform-Tools ("%%SDKSIZE%%")' -ForegroundColor Red -BackgroundColor White}"
+	echo 	call %%CONTINUE%%
+	echo 	call %%YESNO%%
+	echo ^) else if "%%WINVER%%" == "6" ^(
+	echo 	call %%LOGO%%
+	echo	powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'It will download and install Android-SDK-Platform-Tools ("%%SDKSIZE%%")' -ForegroundColor Red -BackgroundColor White}"
+	echo 	call %%CONTINUE%%
+	echo 	call %%YESNO%%
 	echo ^) else ^(
-    echo call "%%UNSUPPORTEDSYSTEM%%"
+    echo 	call "%%UNSUPPORTEDSYSTEM%%"
 	echo ^)
 ) > "%SDKMESSAGE%"
 
@@ -373,11 +388,14 @@ set "DOWNLOAD7ZIPMESSAGE=DOWNLOAD7ZIPMESSAGE.bat"
 	echo call %%CHECKWINVER%%
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
-	echo if "%%WINVER%%" == "%%CHECKWINVER%%" (
-	echo powershell -command "& {Write-Host '7Zip not found or wrong version :-(' -ForegroundColor Red -BackgroundColor White; Write-Host '' -ForegroundColor Red -BackgroundColor White}; Write-Host 'It is required to unpack the stock ROM.' -ForegroundColor Red -BackgroundColor White; Write-Host 'Do you want to download and install it?' -ForegroundColor Black -BackgroundColor White"
-	echo call %%YESNO%%
+	echo if "%%WINVER%%" == "10" ^(
+	echo 	powershell -command "& {Write-Host '7Zip not found or wrong version :-(' -ForegroundColor Red -BackgroundColor White; Write-Host '' -ForegroundColor Red -BackgroundColor White}; Write-Host 'It is required to unpack the stock ROM.' -ForegroundColor Red -BackgroundColor White; Write-Host 'Do you want to download and install it?' -ForegroundColor Black -BackgroundColor White"
+	echo 	call %%YESNO%%
+	echo ^) else if "%%WINVER%%" == "6" ^(
+	echo 	powershell -command "& {Write-Host '7Zip not found or wrong version :-(' -ForegroundColor Red -BackgroundColor White; Write-Host '' -ForegroundColor Red -BackgroundColor White}; Write-Host 'It is required to unpack the stock ROM.' -ForegroundColor Red -BackgroundColor White; Write-Host 'Do you want to download and install it?' -ForegroundColor Black -BackgroundColor White"
+	echo 	call %%YESNO%%
 	echo ^) else ^(
-    echo call %%UNSUPPORTEDSYSTEM%%
+    echo 	call %%UNSUPPORTEDSYSTEM%%
 	echo ^)
 ) > "%DOWNLOAD7ZIPMESSAGE%"
 
@@ -429,13 +447,23 @@ set "OPTION2=OPTION2.bat"
 
 :: Download Stock-Rom
 set "STOCKROMSIZE=1,48GB"
-set "DOWNLAODSTOCKMESSAGE=DOWNLAODSTOCKMESSAGE.bat"
+set "DOWNLOADSTOCKMESSAGE=DOWNLOADSTOCKMESSAGE.bat"
 (
 	echo @echo off    
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'It will download the Stock-ROM %%STOCKROMSIZE%%' -ForegroundColor Red -BackgroundColor White}"
-) > "%DOWNLAODSTOCKMESSAGE%"
+) > "%DOWNLOADSTOCKMESSAGE%"
+
+:: Download GPT-Table
+set "GTP0SIZE=44kb"
+set "DOWNLOADGPT0MESSAGE=DOWNLOADGPT0MESSAGE.bat"
+(
+	echo @echo off    
+	echo call %%LOGO%%
+	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'It will download the Stock-GPT-Table %%GTP0SIZE%%' -ForegroundColor Red -BackgroundColor White}"
+) > "%DOWNLOADGPT0MESSAGE%"
 
 :: Flashing
 :: Get Serial Number
@@ -451,9 +479,9 @@ set "CHECKDEVICE=CHECKDEVICE.bat"
    echo @echo off
    echo for /f "delims=" %%%%I in ^('powershell -command "if ('%%SERIAL%%'.Contains('NB1')) { 'NB1' } else { 'OTHER' }"'^) do set DEVICEIS=%%%%I
    echo if "%%DEVICEIS%%" == "NB1" ^(
-   echo call %%DEVICEISNB1%%
+   echo 	call %%DEVICEISNB1%%
    echo ^) else ^(
-   echo call %%DEVICEISNOTNB1%%
+   echo 	call %%DEVICEISNOTNB1%%
    echo ^)
 ) > "%CHECKDEVICE%"
 
@@ -482,19 +510,19 @@ set "DEVICEISNOTNB1=DEVICEISNOTNB1.bat"
 set "BOOTLOADERUNLOCK=BOOTLOADERUNLOCK.bat"
 (
     echo @echo off
-	echo for /f "tokens=2 delims=: " %%%%A in ('powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% getvar unlocked 2>&1 | Select-String 'unlockeded: yes')"'^) do set "BOOTLOADERUNLOCK=%%%%A"
+	echo for /f "tokens=2 delims=: " %%%%A in ('powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% getvar unlocked 2>&1 | Select-String 'unlocked: yes')"'^) do set "CHECKBOOTLOADERUNLOCK=%%%%A"
 ) > "%BOOTLOADERUNLOCK%"
 
 :: Check if Bootloader is critical unlocked
 set "BOOTLOADERCRITICALUNLOCK=BOOTLOADERCRITICALUNLOCK.bat"
 (
 	echo @echo off 
-	echo for /f "usebackq tokens=*" %%%%A in (`powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flashing unlock_critical 2>&1 | ForEach-Object { $_ -replace '\s+', '' } | Select-String 'Devicealready:unlocked')"`^) do set "BOOTLOADERCRITICALUNLOCK=%%%%A"
+	echo for /f "tokens=2 delims=' " %%%%A in ('powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flashing unlock_critical 2>&1 | ForEach-Object { $_ -replace '\s+', '' } | Select-String 'Devicealready:unlocked')"'^) do set "CHECKBOOTLOADERCRITICALUNLOCK=%%%%A"
 ) > "%BOOTLOADERCRITICALUNLOCK%"
 
 :: Bootloader state
-set "UNLOCKED1=unlocked: yes"
-set "UNLOCKED2=FAILED(remote:'Devicealready:unlocked')"
+set "UNLOCKED1=yes"
+set "UNLOCKED2=Devicealready:unlocked!"
 
 :: Fastboot & Adb
 set "FASTBOOT=adb/fastboot.exe"
@@ -508,10 +536,10 @@ set "FLASHBOOTLOADER=FLASHBOOTLOADER.bat"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Flashing bootloader' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash abl_a ROM/abl.elf)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash xbl_a ROM/xbl.elf)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash abl_b ROM/abl.elf)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash xbl_b ROM/xbl.elf)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash abl_a %%ABL%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash xbl_a %%XBL%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash abl_b %%ABL%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash xbl_b %%XBL%%)"
 ) > "%FLASHBOOTLOADER%"
 
 :: Flash Stock-Images
@@ -522,29 +550,29 @@ set "FLASHSTOCKIMAGES=FLASHSTOCKIMAGES.bat"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Flashing Stock ROM' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash boot_a ROM/boot.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash boot_b ROM/boot.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash box ROM/box.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash cda_a ROM/cda.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash cda_b ROM/cda.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash dsp_a ROM/dsp.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash dsp_b ROM/dsp.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash elabel ROM/elabel.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash hidden_a ROM/hidden.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash hidden_b ROM/hidden.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash keystore ROM/keystore.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash logdump ROM/logdump.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash misc ROM/misc.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash modem_a ROM/modem.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash modem_b ROM/modem.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash persist ROM/persist.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash splash2 ROM/splash2.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash ssd ROM/ssd.bin)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash sutinfo ROM/sutinfo.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash system_a ROM/system.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash system_b ROM/system_other.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash systeminfo_a ROM/systeminfo.img)"
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash systeminfo_b ROM/systeminfo.img)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash boot_a %%BOOT%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash boot_b %%BOOT%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash box %%BOX%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash cda_a %%CDA%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash cda_b %%CDA%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash dsp_a %%DSP%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash dsp_b %%DSP%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash elabel %%ELABEL%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash hidden_a %%HIDDEN%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash hidden_b %%HIDDEN%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash keystore %%KEYSTORE%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash logdump %%LOGDUMP%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash misc %%MISC%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash modem_a %%MODEM%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash modem_b %%MODEM%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash persist %%PERSIST%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash splash2 %%SPLASH2%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash ssd %%SSD%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash sutinfo %%SUTINFO%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash system_a %%SYSTEM%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash system_b %%SYSTEMOTHER%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash systeminfo_a %%SYSTEMINFO%%)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash systeminfo_b %%SYSTEMINFO%%)"
 ) > "%FLASHSTOCKIMAGES%"
 
 :: Set boot-slot
@@ -599,7 +627,7 @@ set "FLASHGPT=FLASHGPT.bat"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Magenta -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Flashing stock partition-table"' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
-	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash partition:0 ROM/gpt_both0.bin)"
+	echo powershell -command "(& %%FASTBOOT%% -s %%SERIAL%% flash partition:0 %%GPT0%%)"
 ) > "%FLASHGPT%"
 
 :: Check if Bootloader is unlocked message
@@ -623,16 +651,15 @@ set "BOOTLOADERCRITICALUNLOCKMESSAGE=BOOTLOADERCRITICALUNLOCKMESSAGE.bat"
 set "WELCOMESCREEN=WELCOMESCREEN.bat"
 (
 	echo if "%%FLASHMODE%%" == "Stock" ^(
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'This will flash the Nokia stock ROM (Android 9 / 516A) on your device.' -ForegroundColor Black -BackgroundColor White}"
-	echo timeout /t 5
-	echo ^) else ^(
-	if "%%FLASHMODE%%" == "GPT" ^(
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'This will flash the Nokia stock GPT-Table for you for flasing your device with NOST, OST LA, OSTRemote.' -ForegroundColor Black -BackgroundColor White}"
-	echo timeout /t 5
+	echo 	call %%LOGO%%
+	echo 	powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'This will flash the Nokia stock ROM (Android 9 / 516A) on your device.' -ForegroundColor Black -BackgroundColor White}"
+	echo	timeout /t 5
+	echo ^) else if "%%FLASHMODE%%" == "GPT" ^(
+	echo 	call %%LOGO%%
+	echo 	powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'This will flash the Nokia stock GPT-Table for you for flasing your device with NOST, OST LA, OSTRemote.' -ForegroundColor Black -BackgroundColor White}"
+	echo 	timeout /t 5
 	echo ^)
 ) > "%WELCOMESCREEN%"
 
@@ -640,21 +667,21 @@ set "WELCOMESCREEN=WELCOMESCREEN.bat"
 set "WARNINGSCREEN1=WARNINGSCREEN1.bat"
 (
 	echo if "%%FLASHMODE%%" == "Stock" ^(
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'MAKE A BACKUP FROM YOUR DATA!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!' -ForegroundColor Red -BackgroundColor White}"
-	echo timeout /t 10
+	echo 	call %%LOGO%%
+	echo 	powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'MAKE A BACKUP FROM YOUR DATA!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	timeout /t 10
 	echo ^) else if "%%FLASHMODE%%" == "GPT" ^(
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'MAKE A BACKUP FROM YOUR DATA!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!' -ForegroundColor Red -BackgroundColor White}"
-	echo timeout /t 10
+	echo 	call %%LOGO%%
+	echo 	powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'MAKE A BACKUP FROM YOUR DATA!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	timeout /t 10
 	echo ^)
 ) > "%WARNINGSCREEN1%"
 
@@ -662,13 +689,13 @@ set "WARNINGSCREEN1=WARNINGSCREEN1.bat"
 set "WARNINGSCREEN2=WARNINGSCREEN2.bat"
 (
 	echo if "%%FLASHMODE%%" == "Stock" ^(
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'FLASHING SOME PARTITIONS CAN TAKE SOME TIME (ABOUT 5 MINUTES).' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'DO NOT UNPLUG THE USB-CABLE OR CLOSE CMD OR YOU WILL BRICK YOUR DEVICE!!!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'SOMETIMES CMD SEEMS TO BE FREZZING. DO NOT ABORT THE PROCESS AND STILL WAITING UNTIL THE PROCESS IS DONE.' -ForegroundColor Red -BackgroundColor White}"
-	echo timeout /t 10
+	echo 	call %%LOGO%%
+	echo 	powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'WARNING!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'FLASHING SOME PARTITIONS CAN TAKE SOME TIME (ABOUT 5 MINUTES).' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'DO NOT UNPLUG THE USB-CABLE OR CLOSE CMD OR YOU WILL BRICK YOUR DEVICE!!!' -ForegroundColor Red -BackgroundColor White}"
+	echo 	powershell -command "& {Write-Host 'SOMETIMES CMD SEEMS TO BE FREZZING. DO NOT ABORT THE PROCESS AND STILL WAITING UNTIL THE PROCESS IS DONE.' -ForegroundColor Red -BackgroundColor White}"
+	echo 	timeout /t 10
 	echo ^)
 ) > "%WARNINGSCREEN2%"
 
@@ -754,7 +781,7 @@ set "FINISHSTOCK=FINISHSTOCK.bat"
 	echo timeout /t 10
 	echo cls
 	echo color 0F
-	echo exit 0
+	echo %%CLEANUP%% ^&^& exit 0
 ) >"%FINISHSTOCK%"
 
 :: Finish flash GPT-Table
@@ -769,7 +796,7 @@ set "FINISHGPT=FINISHGPT.bat"
 	echo timeout /t 10
 	echo cls
 	echo color 0F
-	echo exit 0
+	echo %%CLEANUP%% ^&^& exit 0
 ) >"%FINISHGPT%"
 
 :: Ask for check for updates
@@ -788,12 +815,7 @@ set "CHECKFORUPDATE=CHECKFORUPDATE.bat"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Check for updates' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
-	echo set "UPDTGHURL=https://raw.githubusercontent.com/Niemandausduisburg"
-	echo set "UPDTGHREPO=untreble"
-	echo set "UPDTGHDLURL=refs/heads"
-	echo set "UPDTGHBRANCH=main"
-	echo set "UPDTGHFILE=revert.bat"
-	echo curl -L --connect-timeout 10 %%UPDTGHURL%%/%%UPDTGHREPO%%/%%UPDTGHDLURL%%/%%UPDTGHBRANCH%%/%%UPDTGHFILE%% --output temp.bat
+	echo curl -L --connect-timeout 10 %%TGHRAWURL%%/%%TGHREPO%%/%%TGHUPDURL%%/%%TGHBRANCH%%/%%TGHUPDFILE%% --output temp.bat
 ) >"%CHECKFORUPDATE%"
 
 :: Compare Scripts
@@ -808,9 +830,48 @@ set "ASKFORUPDATE=ASKFORUPDATE.bat"
 (
 	echo call %%LOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'Update found!!!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Do you want update?' -ForegroundColor Black -BackgroundColor White}"
 	echo call %%YESNO%%
 ) >"%ASKFORUPDATE%"
+
+:: When no update is selected
+set "SELCECTNOUPDATE=SELCECTNOUPDATE.bat"
+(
+	echo call %%LOGO%%
+	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'Don''t cry when something is not working.' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'Joke xD' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'When something is not working check for Updates.' -ForegroundColor Red -BackgroundColor White}"
+	echo del temp.bat
+	echo timeout /t 5
+) >"%SELCECTNOUPDATE%"
+
+:: When no updated found
+set "NOUPDATEFOUND=NOUPDATEFOUND.bat"
+(
+	echo call %%LOGO%%
+	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'T-Virus is already up-to-date :-)' -ForegroundColor Green -BackgroundColor White}"
+	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'T-Virus will continue now.' -ForegroundColor Black -BackgroundColor White}"
+	echo del temp.bat
+	echo timeout /t 5
+) >"%NOUPDATEFOUND%"
+
+:: Update T-Virus
+set "UPDATE=UPDATE.bat"
+(
+	echo call %%LOGO%%
+	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'Update T-Virus...' -ForegroundColor Red -BackgroundColor White}"
+	echo timeout /t 5
+    echo del revert.bat
+    echo ren temp.bat revert.bat
+	echo call %%AFTERUPDATE%%
+	echo start /b revert.bat
+	echo exit 0
+) >"%UPDATE%"
 
 :: After Update
 set "AFTERUPDATE=AFTERUPDATE.bat"
@@ -823,78 +884,1331 @@ set "AFTERUPDATE=AFTERUPDATE.bat"
 	echo timeout /t 5
 ) >"%AFTERUPDATE%"
 
-:: When no update is selected
-set "SELCECTNOUPDATE=SELCECTNOUPDATE.bat"
+:: Remove Sub-Scripts
+set "CLEANUP=CLEANUP.bat"
 (
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'Don''t cry when something is not working.' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'Joke xD' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'When something is not working check for Updates.' -ForegroundColor Red -BackgroundColor White}"
-	echo timeout /t 5
-) >"%SELCECTNOUPDATE%"
-
-:: When no updated found
-set "NOUPDATEFOUND=NOUPDATEFOUND.bat"
-(
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'T-Virus is already up-to-date :-)' -ForegroundColor Green -BackgroundColor White}"
-	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'T-Virus will continue now.' -ForegroundColor Black -BackgroundColor White}"
-	echo timeout /t 5
-) >"%NOUPDATEFOUND%"
-
-:: Update T-Virus
-set "UPDATE=UPDATE.bat"
-(
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'Update T-Virus...' -ForegroundColor Red -BackgroundColor White}"
-	echo timeout /t 5
-	echo rm revert.bat
-	echo ren temp.bat revert.bat
-	echo call %%LOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'Update done :-)' -ForegroundColor Green -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'T-Virus will restart now' -ForegroundColor Red -BackgroundColor White}"
-	echo timeout /t 5
-	echo start /b revert.bat
-	echo exit 0
-) >"%UPDATE%"
+:: Reset variables
+	echo set "ABL="
+	echo set "ABORTSCRIPT="
+	echo set "ADB="
+	echo set "ADBPATH="
+	echo set "ADBTOOLS="
+	echo set "AFTERUPDATE="
+	echo set "ASK7ZIPDOWNLOAD="
+	echo set "askflashsure="
+	echo set "ASKFORGPT="
+	echo set "ASKFORSTOCK="
+	echo set "ASKFORUPDATE="
+	echo set "askromgpt="
+	echo set "ASKUPDATE="
+	echo set "askusertosearchupdate="
+	echo set "askusertoupdate="
+	echo set "BOOT="
+	echo set "BOOTLOADERCRITICALUNLOCK="
+	echo set "BOOTLOADERCRITICALUNLOCKMESSAGE="
+	echo set "BOOTLOADERUNLOCK="
+	echo set "BOOTLOADERUNLOCKMESSAGE="
+	echo set "BOX="
+	echo set "BROKEN7ZARCHIVE="
+	echo set "BROKENADBTOOLS="
+	echo set "BROKENARCHIVE="
+	echo set "BROKENGPT="
+	echo set "BROKENSTOCK="
+	echo set "CDA="
+	echo set "CHECKADBPATH="
+	echo set "CHECKADBTOOLS="
+	echo set "CHECKARCH="
+	echo set "CHECKDEVICE="
+	echo set "CHECKFASTBOOTPATH="
+	echo set "CHECKFORUPDATE="
+	echo set "CHECKSTOCKIMAGES="
+	echo set "CHECKSUM="
+	echo set "CHECKWINVER="
+	echo set "CLEANUP="
+	echo set "COMPAREUPDATE="
+	echo set "CONTINUE="
+	echo set "DEVICEIS="
+	echo set "DEVICEISNB1="
+	echo set "DEVICEISNOTNB1="
+	echo set "DOWNLOAD7ZIPMESSAGE="
+	echo set "DOWNLOADGPT0MESSAGE="
+	echo set "DOWNLOADSTOCKMESSAGE="
+	echo set "downloadstockselect="
+	echo set "DSP="
+	echo set "ELABEL="
+	echo set "ERASEUSERDATA="
+	echo set "FASTBOOT="
+	echo set "FASTBOOTNEEDED="
+	echo set "FASTBOOTPATH="
+	echo set "FINISHGPT="
+	echo set "FINISHSTOCK="
+	echo set "FLASHBOOTLOADER="
+	echo set "FLASHGPT="
+	echo set "FLASHMODE="
+	echo set "FLASHREADY="
+	echo set "FLASHSSURE="
+	echo set "FLASHSTOCKIMAGES="
+	echo set "GETABL="
+	echo set "GETBOOT="
+	echo set "GETBOX="
+	echo set "GETCDA="
+	echo set "GETDSP="
+	echo set "GETELABEL="
+	echo set "GETGPT0="
+	echo set "GETGPTSTOCK="
+	echo set "GETHIDDEN="
+	echo set "GETKEYSTORE="
+	echo set "GETLOGDUMP="
+	echo set "GETMISC="
+	echo set "GETMODEM="
+	echo set "GETPERSIST="
+	echo set "GETSERIALNO="
+	echo set "GETSHA256SUMABL="
+	echo set "GETSHA256SUMBOOT="
+	echo set "GETSHA256SUMBOX="
+	echo set "GETSHA256SUMCDA="
+	echo set "GETSHA256SUMDSP="
+	echo set "GETSHA256SUMELABEL="
+	echo set "GETSHA256SUMGPT0="
+	echo set "GETSHA256SUMHIDDEN="
+	echo set "GETSHA256SUMKEYSTORE="
+	echo set "GETSHA256SUMLOGDUMP="
+	echo set "GETSHA256SUMMISC="
+	echo set "GETSHA256SUMMODEM="
+	echo set "GETSHA256SUMPERSIST="
+	echo set "GETSHA256SUMSPLASH2="
+	echo set "GETSHA256SUMSSD="
+	echo set "GETSHA256SUMSUTINFO="
+	echo set "GETSHA256SUMSYSTEM="
+	echo set "GETSHA256SUMSYSTEMINFO="
+	echo set "GETSHA256SUMSYSTEMOTHER="
+	echo set "GETSHA256SUMXBL="
+	echo set "GETSPLASH2="
+	echo set "GETSSD="
+	echo set "GETSUTINFO="
+	echo set "GETSYSTEM="
+	echo set "GETSYSTEMINFO="
+	echo set "GETSYSTEMOTHER="
+	echo set "GETXBL="
+	echo set "GOODGPT="
+	echo set "GOODSTOCK="
+	echo set "GPT0="
+	echo set "gpt0downloadquestion="
+	echo set "GPT="
+	echo set "GPTSTOCK="
+	echo set "GTP0SIZE="
+	echo set "HIDDEN="
+	echo set "INSTRUCTION="
+	echo set "ISARCH="
+	echo set "KEYSTORE="
+	echo set "LASTWARNINGGPT="
+	echo set "LASTWARNINGSTOCK="
+	echo set "LOGDUMP="
+	echo set "logo1="
+	echo set "logo2="
+	echo set "logo3="
+	echo set "logo4="
+	echo set "logo5="
+	echo set "logo6="
+	echo set "LOGO="
+	echo set "MAINMENU="
+	echo set "MISC="
+	echo set "MODEM="
+	echo set "nokia1="
+	echo set "nokia2="
+	echo set "nokia3="
+	echo set "nokia4="
+	echo set "nokia5="
+	echo set "nokia6="
+	echo set "nokia7="
+	echo set "NOKIALOGO="
+	echo set "NOSDK="
+	echo set "NOUPDATEFOUND="
+	echo set "OPTION1="
+	echo set "OPTION2="
+	echo set "optionselect="
+	echo set "PERSIST="
+	echo set "proceedflash="
+	echo set "REBOOT_BOOTLOADER="
+	echo set "REBOOT_SYSTEM="
+	echo set "sdkchoice="
+	echo set "SDKMESSAGE="
+	echo set "SDKSIZE="
+	echo set "SDKZIP="
+	echo set "SEARCHEDFORUPDATE="
+	echo set "SELCECTNOUPDATE="
+	echo set "SERIAL=" 
+	echo set "SETBOOTSLOT="
+	echo set "SHA256SUMABL="
+	echo set "SHA256SUMBOOT="
+	echo set "SHA256SUMBOX="
+	echo set "SHA256SUMCDA="
+	echo set "SHA256SUMDSP="
+	echo set "SHA256SUMELABEL="
+	echo set "SHA256SUMGPT0="
+	echo set "SHA256SUMHIDDEN="
+	echo set "SHA256SUMKEYSTORE="
+	echo set "SHA256SUMLOGDUMP="
+	echo set "SHA256SUMMISC="
+	echo set "SHA256SUMMODEM="
+	echo set "SHA256SUMPERSIST="
+	echo set "SHA256SUMSPLASH2="
+	echo set "SHA256SUMSSD="
+	echo set "SHA256SUMSUTINFO="
+	echo set "SHA256SUMSYSTEM="
+	echo set "SHA256SUMSYSTEMINFO="
+	echo set "SHA256SUMSYSTEMOTHER="
+	echo set "SHA256SUMXBL="
+	echo set "SIZE7ZIP="
+	echo set "SPLASH2="
+	echo set "SSD="
+	echo set "STOCKGETSHA="
+	echo set "STOCKGPTGETSHA="
+	echo set "STOCKIMAGES="
+	echo set "STOCKROMSIZE="
+	echo set "SUTINFO="
+	echo set "SYSTEM="
+	echo set "SYSTEMINFO="
+	echo set "SYSTEMOTHER="
+	echo set "TGHBRANCH="
+	echo set "TGHDLURL="
+	echo set "TGHREPO="
+	echo set "TGHTAG="
+	echo set "TGHURL="
+	echo set "UNLOCKED1="
+	echo set "UNLOCKED2="
+	echo set "UNSUPPORTEDSYSTEM="
+	echo set "UPDATE="
+	echo set "WARNINGSCREEN1="
+	echo set "WARNINGSCREEN2="
+	echo set "WELCOMESCREEN="
+	echo set "WELLDONE="
+	echo set "WINVER="
+	echo set "WRONG7ZIP="
+	echo set "WRONGADBTOOLS="
+	echo set "WRONGARCHITECTURE="
+	echo set "XBL="	
+	echo set "YESNO="
+	echo set "Z7ZIPCHECKSHA="
+	echo set "ZIP7ZIP="
+	echo set "ZIP7ZIPCHECKSHA="
+	echo set "ZIP7ZIPNEEDED="
+	echo set "ZIP7ZIPSHA="
+	echo set "zipdownloadquestion="
+	echo set "zipquestion="	
+:: Remove Sub-Scripts
+	echo del ADBTOOLS.bat
+	echo del AFTERUPDATE.bat
+	echo del ASK7ZIPDOWNLOAD.bat
+	echo del ASKFORGPT.bat
+	echo del ASKFORSTOCK.bat
+	echo del ASKFORUPDATE.bat
+	echo del ASKUPDATE.bat
+	echo del BOOTLOADERCRITICALUNLOCK.bat
+	echo del BOOTLOADERCRITICALUNLOCKMESSAGE.bat
+	echo del BOOTLOADERUNLOCK.bat
+	echo del BOOTLOADERUNLOCKMESSAGE.bat
+	echo del BROKEN7ZARCHIVE.bat
+	echo del BROKENADBTOOLS.bat
+	echo del BROKENARCHIVE.bat
+	echo del BROKENGPT.bat
+	echo del BROKENSTOCK.bat
+	echo del CHECK7ZIP.bat
+	echo del CHECKADBTOOLS.bat
+	echo del CHECKDEVICE.bat
+	echo del CHECKFORUPDATE.bat
+	echo del CHECKSTOCKIMAGES.bat
+	echo del CHECKWINVER.bat
+	echo del COMPAREUPDATE.bat
+	echo del CONTINUE.bat
+	echo del DEVICEISNB1.bat
+	echo del DEVICEISNOTNB1.bat
+	echo del DOWNLOAD7ZIPMESSAGE.bat
+	echo del DOWNLOADGPT0MESSAGE.bat
+	echo del DOWNLOADSTOCKMESSAGE.bat
+	echo del ERASEUSERDATA.bat
+	echo del FINISHGPT.bat
+	echo del FINISHSTOCK.bat
+	echo del FLASHBOOTLOADER.bat
+	echo del FLASHGPT.bat
+	echo del FLASHSSURE.bat
+	echo del FLASHSTOCKIMAGES.bat
+	echo del GETGPTSTOCK.bat
+	echo del GETSERIALNO.bat
+	echo del GOODGPT.bat
+	echo del GOODSTOCK.bat
+	echo del INSTRUCTION.bat
+	echo del LASTWARNINGGPT.bat
+	echo del LASTWARNINGSTOCK.bat
+	echo del LOGO.bat
+	echo del MAINMENU.bat
+	echo del NOKIALOGO.bat
+	echo del NOSDK.bat
+	echo del NOUPDATEFOUND.bat
+	echo del OPTION1.bat
+	echo del OPTION2.bat
+	echo del REBOOT_BOOTLOADER.bat
+	echo del REBOOT_SYSTEM.bat
+	echo del REMOVESUBSCRIPTSABORTSCRIPT.bat
+	echo del SDKMESSAGE.bat
+	echo del SELCECTNOUPDATE.bat
+	echo del SETBOOTSLOT.bat
+	echo del STOCKGETSHA.bat
+	echo del STOCKGPTGETSHA.bat
+	echo del STOCKIMAGES.bat
+	echo del UNSUPPORTEDSYSTEM.bat
+	echo del UPDATE.bat
+	echo del WARNINGSCREEN1.bat
+	echo del WARNINGSCREEN2.bat
+	echo del WELCOMESCREEN.bat
+	echo del WELLDONE.bat
+	echo del WRONG7ZIP.bat
+	echo del WRONGADBTOOLS.bat
+	echo del WRONGARCHITECTURE.bat
+	echo del YESNO.bat
+	echo del ZIP7ZIPCHECKSHA.bat
+	echo del ABORTSCRIPT.bat
+	echo del CLEANUP.bat
+) >"%CLEANUP%"
 ::-------------------------------------------------------------------------------------------------------------------------------------	
 :: Start T-Virus
 :: Prepare
-
 :: Ask for checking for Update
 call %ASKUPDATE%
 choice /n /c:12 %1
-if errorlevel 1 set "askusertoupdate=1"
-if errorlevel 2 set "askusertoupdate=2"
+if errorlevel 1 set "askusertosearchupdate=1"
+if errorlevel 2 set "askusertosearchupdate=2"
 
-if "%askusertoupdate%" == "1" (
-call %CHECKFORUPDATE%
-call %COMPAREUPDATE%
-) else if "%askusertoupdate%" == "2" (
-call %SELCECTNOUPDATE%
+if "%askusertosearchupdate%" == "1" (
+	call %CHECKFORUPDATE%
+	call %COMPAREUPDATE%
+	set "SEARCHEDFORUPDATE=1"
+) else if "%askusertosearchupdate%" == "2" (
+	call %SELCECTNOUPDATE%
 )
-
+  
 :: Ask for Update
-echo %REVERTNEW%
-echo %REVERTOLD%
-pause
-
-if not "%REVERTOLD%" == "%REVERTNEW%" (
-call %ASKFORUPDATE%
-choice /n /c:12 %1
-if errorlevel 1 set "askuserupdate=1"
-if errorlevel 2 set "askuserupdate=2"
-) else (
-call %NOUPDATEFOUND%
+if "%SEARCHEDFORUPDATE%" == "1" (
+	if not "%REVERTOLD%" == "%REVERTNEW%" (
+		call %ASKFORUPDATE%
+		choice /n /c:12 %1
+		if errorlevel 1 set "askusertoupdate=1"
+		if errorlevel 2 set "askusertoupdate=2"
+	) else if "%REVERTOLD%" == "%REVERTNEW%" (
+		call %NOUPDATEFOUND%
+	)
 )
 
-if "%askuserupdate%" == "1" (
-call %Update%
-) else (
-call %SELCECTNOUPDATE%
+:: Update T-Virus
+if "%askusertoupdate%" == "1" (
+	%UPDATE%
+) else if "%askusertoupdate%" == "2" (
+	call %SELCECTNOUPDATE%%
+)
+
+:: Check architecture
+if "%CHECKARCH%" == "%ISARCH%" (
+	timeout /t 0
+) else if not "%CHECKARCH%" == "%ISARCH%" ( 
+	call %WRONGARCHITECTURE%
+)
+
+:: Check if Android-SDK-Platform-Tools are installed
+call %ADBTOOLS%
+call %CHECKADBTOOLS%
+
+if "%FASTBOOTNEEDED%" == "yes" (
+	call %NOSDK%
+	choice /n /c:12 %1
+	if errorlevel 1 set "sdkchoice=1"
+	if errorlevel 2 set "sdkchoice=2"
+)
+
+:: Check which package manager is used 
+:: What is a package-manager ??? XD
+
+:: Check Windows Version
+if "%FASTBOOTNEEDED%" == "yes" (
+	if "%sdkchoice%" == "1" (
+		call %CHECKWINVER%
+	) else if "%sdkchoice%" == "2" (
+		call %ABORTSCRIPT%
+	)
+)
+
+:: Asking for downloading ADB-Tools
+if "%FASTBOOTNEEDED%" == "yes" (
+	if "%sdkchoice%" == "1" (
+		call %SDKMESSAGE%
+		choice /n /c:12 %1
+		if errorlevel 1 set "sdkdownloadchoice=1"
+		if errorlevel 2 set "sdkdownloadchoice=2"
+	)
+)
+
+:: Download ADB-Tools
+if "%FASTBOOTNEEDED%" == "yes" (
+	if "%sdkchoice%" == "1" (
+		if "%sdkdownloadchoice%" == "1" (
+			if "%WINVER%" == "6" (
+				call %LOGO%
+				powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+				curl -L --connect-timeout 10 %TGHURL%/%TGHREPO%/%TGHDLURL%/%TGHTAG%/%SDKZIP% --output %SDKZIP%
+				set "CHECKSUM=D076031AF58F4413B373E055737340528B8C0A68FA39DF62B3FBFA361D93AD87"
+				for /f "usebackq" %%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SDKZIP%' | Select-Object -ExpandProperty Hash"`) do set GETCHECKSUM=%%A
+			) else if "%WINVER%" == "10" (
+				call %LOGO%
+				powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+				curl -L --connect-timeout 10 %TGHURL%/%TGHREPO%/%TGHDLURL%/%TGHTAG%/%SDKZIP% --output %SDKZIP%
+				set "CHECKSUM=D076031AF58F4413B373E055737340528B8C0A68FA39DF62B3FBFA361D93AD87"
+				for /f "usebackq" %%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%SDKZIP%' | Select-Object -ExpandProperty Hash"`) do set GETCHECKSUM=%%A
+			)
+		) else if "%sdkdownloadchoice%" == "2" (
+			call %ABORTSCRIPT%
+		)
+	)
+)
+
+:: Install ADB-Tools
+if "%FASTBOOTNEEDED%" == "yes" (
+	if "%sdkchoice%" == "1" (
+		if "%sdkdownloadchoice%" == "1" (
+			if "%CHECKSUM%" == "%GETCHECKSUM%" (
+				if "%WINVER%" == "6" (
+					call %LOGO%
+					powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+					powershell -command "Expand-Archive -Path '%SDKZIP%' -DestinationPath 'adb'"
+					del %SDKZIP% 
+				) else if "%WINVER%" == "10" (
+					call %LOGO%
+					powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
+					powershell -command "Expand-Archive -Path '%SDKZIP%' -DestinationPath 'adb'"
+					del %SDKZIP%
+				)
+			) else if not "%CHECKSUM%" == "%GETCHECKSUM%" (
+				call %BROKENADBTOOLS%
+				timeout /t 10
+				call %ABORTSCRIPT%
+			)
+		)
+	)
+)
+
+:: Check if Android-SDK-Platform-Tools are installed sucessfully
+call %ADBTOOLS%
+call %CHECKADBTOOLS%
+
+if "%FASTBOOTNEEDED%" == "no" (
+	timeout /t0
+) else if "%FASTBOOTNEEDED%" == "yes" (
+	call %WRONGADBTOOLS%
+	timeout /t 10
+	call %ABORTSCRIPT%
+)
+:: -------------------------------------------------------------------------------------------------------------------------------------
+:: Main
+:: Welcome Screen (Main Menu)
+if "%FASTBOOTNEEDED%" == "no" (
+	call %MAINMENU%
+	call %OPTION1%
+	call %OPTION2%
+	choice /n /c:12 %1
+	if errorlevel 1 set "optionselect=1"
+	if errorlevel 2 set "optionselect=2"
+)
+
+:: Check if the Stock-ROM-images are already exists
+if "%FASTBOOTNEEDED%" == "no" (
+	if "%optionselect%" == "1" (
+		call %STOCKIMAGES%
+		call %CHECKSTOCKIMAGES%
+	)
+)
+
+:: Ask for download Stock-ROM if not exist
+if "%FASTBOOTNEEDED%" == "no" (
+	if "%optionselect%" == "1" (
+		if "%ABL%" == "%GETABL%" (
+			if "%BOOT%" == "%GETBOOT%" (
+				if "%BOX%" == "%GETBOX%" (
+					if "%CDA%" == "%GETCDA%" (
+						if "%DSP%" == "%GETDSP%" (
+							if "%ELABEL%" == "%GETELABEL%" (
+								if "%GPT0%" == "%GETGPT0%" (
+									if "%HIDDEN%" == "%GETHIDDEN%" (
+										if "%KEYSTORE%" == "%GETKEYSTORE%" (
+											if "%LOGDUMP%" == "%GETLOGDUMP%" (
+												if "%MISC%" == "%GETMISC%" (
+													if "%MODEM%" == "%GETMODEM%" (
+														if "%PERSIST%" == "%GETPERSIST%" (
+															if "%SPLASH2%" == "%GETSPLASH2%" (
+																if "%SSD%" == "%GETSSD%" (
+																	if "%SUTINFO%" == "%GETSUTINFO%" (
+																		if "%SYSTEM%" == "%GETSYSTEM%" (
+																			if "%SYSTEMOTHER%" == "%GETSYSTEMOTHER%" (
+																				if "%SYSTEMINFO%" == "%GETSYSTEMINFO%" (
+																					if "%XBL%" == "%GETXBL%" (
+																						timeout /t 0 
+																					) else if not "%XBL%" == "%GETXBL%" (
+																						call %DOWNLOADSTOCKMESSAGE%
+																						call %CONTINUE%
+																						call %YESNO%
+																						choice /n /c:12 %1
+																						if errorlevel 1 set "downloadstockselect=1"
+																						if errorlevel 2 set "downloadstockselect=2"
+																					)
+																				) else if not "%SYSTEMINFO%" == "%GETSYSTEMINFO%" (
+																					call %DOWNLOADSTOCKMESSAGE%
+																					call %CONTINUE%
+																					call %YESNO%
+																					choice /n /c:12 %1
+																					if errorlevel 1 set "downloadstockselect=1"
+																					if errorlevel 2 set "downloadstockselect=2"
+																				)
+																			) else if not "%SYSTEMOTHER%" == "%GETSYSTEMOTHER%" (
+																				call %DOWNLOADSTOCKMESSAGE%
+																				call %CONTINUE%
+																				call %YESNO%
+																				choice /n /c:12 %1
+																				if errorlevel 1 set "downloadstockselect=1"
+																				if errorlevel 2 set "downloadstockselect=2"
+																			)
+																		) else if not "%SYSTEM%" == "%GETSYSTEM%" (
+																			call %DOWNLOADSTOCKMESSAGE%
+																			call %CONTINUE%
+																			call %YESNO%
+																			choice /n /c:12 %1
+																			if errorlevel 1 set "downloadstockselect=1"
+																			if errorlevel 2 set "downloadstockselect=2"
+																		)
+																	) else if not "%SUTINFO%" == "%GETSUTINFO%" (
+																		call %DOWNLOADSTOCKMESSAGE%
+																		call %CONTINUE%
+																		call %YESNO%
+																		choice /n /c:12 %1
+																		if errorlevel 1 set "downloadstockselect=1"
+																		if errorlevel 2 set "downloadstockselect=2"
+																	)
+																) else if not "%SSD%" == "%GETSSD%" (
+																	call %DOWNLOADSTOCKMESSAGE%
+																	call %CONTINUE%
+																	call %YESNO%
+																	choice /n /c:12 %1
+																	if errorlevel 1 set "downloadstockselect=1"
+																	if errorlevel 2 set "downloadstockselect=2"
+																)
+															) else if not "%SPLASH2%" == "%GETSPLASH2%" (
+																call %DOWNLOADSTOCKMESSAGE%
+																call %CONTINUE%
+																call %YESNO%
+																choice /n /c:12 %1
+																if errorlevel 1 set "downloadstockselect=1"
+																if errorlevel 2 set "downloadstockselect=2"
+															)
+														) else if not "%PERSIST%" == "%GETPERSIST%" (
+															call %DOWNLOADSTOCKMESSAGE%
+															call %CONTINUE%
+															call %YESNO%
+															choice /n /c:12 %1
+															if errorlevel 1 set "downloadstockselect=1"
+															if errorlevel 2 set "downloadstockselect=2"
+														)
+													) else if not "%MODEM%" == "%GETMODEM%" (
+														call %DOWNLOADSTOCKMESSAGE%
+														call %CONTINUE%
+														call %YESNO%
+														choice /n /c:12 %1
+														if errorlevel 1 set "downloadstockselect=1"
+														if errorlevel 2 set "downloadstockselect=2"
+													)
+												) else if not "%MISC%" == "%GETMISC%" (
+													call %DOWNLOADSTOCKMESSAGE%
+													call %CONTINUE%
+													call %YESNO%
+													choice /n /c:12 %1
+													if errorlevel 1 set "downloadstockselect=1"
+													if errorlevel 2 set "downloadstockselect=2"
+												)
+											) else if not "%LOGDUMP%" == "%GETLOGDUMP%" (
+												call %DOWNLOADSTOCKMESSAGE%
+												call %CONTINUE%
+												call %YESNO%
+												choice /n /c:12 %1
+												if errorlevel 1 set "downloadstockselect=1"
+												if errorlevel 2 set "downloadstockselect=2"
+											)
+										) else if not "%KEYSTORE%" == "%GETKEYSTORE%" (
+											call %DOWNLOADSTOCKMESSAGE%
+											call %CONTINUE%
+											call %YESNO%
+											choice /n /c:12 %1
+											if errorlevel 1 set "downloadstockselect=1"
+											if errorlevel 2 set "downloadstockselect=2"
+										)
+									) else if not "%HIDDEN%" == "%GETHIDDEN%" (
+										call %DOWNLOADSTOCKMESSAGE%
+										call %CONTINUE%
+										call %YESNO%
+										choice /n /c:12 %1
+										if errorlevel 1 set "downloadstockselect=1"
+										if errorlevel 2 set "downloadstockselect=2"
+									)
+								) else if not "%GPT0%" == "%GETGPT0%" (
+									call %DOWNLOADSTOCKMESSAGE%
+									call %CONTINUE%
+									call %YESNO%
+									choice /n /c:12 %1
+									if errorlevel 1 set "downloadstockselect=1"
+									if errorlevel 2 set "downloadstockselect=2"
+								)
+							) else if not "%ELABEL%" == "%GETELABEL%" (
+								call %DOWNLOADSTOCKMESSAGE%
+								call %CONTINUE%
+								call %YESNO%
+								choice /n /c:12 %1
+								if errorlevel 1 set "downloadstockselect=1"
+								if errorlevel 2 set "downloadstockselect=2"
+							)
+						) else if not "%DSP%" == "%GETDSP%" (
+							call %DOWNLOADSTOCKMESSAGE%
+							call %CONTINUE%
+							call %YESNO%
+							choice /n /c:12 %1
+							if errorlevel 1 set "downloadstockselect=1"
+							if errorlevel 2 set "downloadstockselect=2"
+						)
+					) else if not "%CDA%" == "%GETCDA%" (
+						call %DOWNLOADSTOCKMESSAGE%
+						call %CONTINUE%
+						call %YESNO%
+						choice /n /c:12 %1
+						if errorlevel 1 set "downloadstockselect=1"
+						if errorlevel 2 set "downloadstockselect=2"
+					)
+				) else if not "%BOX%" == "%GETBOX%" (
+					call %DOWNLOADSTOCKMESSAGE%
+					call %CONTINUE%
+					call %YESNO%
+					choice /n /c:12 %1
+					if errorlevel 1 set "downloadstockselect=1"
+					if errorlevel 2 set "downloadstockselect=2"
+				)
+			) else if not "%BOOT%" == "%GETBOOT%" (
+				call %DOWNLOADSTOCKMESSAGE%
+				call %CONTINUE%
+				call %YESNO%
+				choice /n /c:12 %1
+				if errorlevel 1 set "downloadstockselect=1"
+				if errorlevel 2 set "downloadstockselect=2"
+			)
+		) else if not "%ABL%" == "%GETABL%" (
+			call %DOWNLOADSTOCKMESSAGE%
+			call %CONTINUE%
+			call %YESNO%
+			choice /n /c:12 %1
+			if errorlevel 1 set "downloadstockselect=1"
+			if errorlevel 2 set "downloadstockselect=2"
+		)
+	)
+)
+
+:: Check if 7Zip is installed
+:: Check which package manager is used
+:: Whats a package manager?? xD
+:: But we need to check windows Version
+if "%FASTBOOTNEEDED%" == "yes" (
+	if "%optionselect%" == "1" (
+		if "%downloadstockselect%" == "1" (
+			if not "%ABL%" == "%GETABL%" (
+				call %CHECKWINVER%
+			) else if not "%BOOT%" == "%GETBOOT%" (
+				call %CHECKWINVER%
+			) else if not "%BOX%" == "%GETBOX%" (
+				call %CHECKWINVER%
+			) else if not "%CDA%" == "%GETCDA%%" (
+				call %CHECKWINVER%
+			) else if not "%DSP%" == "%GETDSP%" (
+				call %CHECKWINVER%
+			) else if not "%ELABEL%" == "%GETELABEL%" (
+				call %CHECKWINVER%
+			) else if not "%GPT0%" == "%GETGPT0%" (
+				call %CHECKWINVER%
+			) else if not "%HIDDEN%" == "%GETHIDDEN%" (
+				call %CHECKWINVER%
+			) else if not "%KEYSTORE%" == "%GETKEYSTORE%" (
+				call %CHECKWINVER%
+			) else if not "%LOGDUMP%" == "%GETLOGDUMP%" (
+				call %CHECKWINVER%
+			) else if not "%MISC%" == "%GETMISC%" (
+				call %CHECKWINVER%
+			) else if not "%MODEM%" == "%GETMODEM%" (
+				call %CHECKWINVER%
+			) else if not "%PERSIST%" == "%GETPERSIST%" (
+				call %CHECKWINVER%
+			) else if not "%SPLASH2%" == "%GETSPLASH2%" (
+				call %CHECKWINVER%
+			) else if not "%SSD%" == "%GETSSD%" (
+				call %CHECKWINVER%
+			) else if not "%SUTINFO%" == "%GETSUTINFO%" (
+				call %CHECKWINVER%
+			) else if not "%SYSTEM%" == "%SYSTEM%" (
+				call %CHECKWINVER%
+			) else if not "%SYSTEMOTHER%" == "%GETSYSTEMOTHER%" (
+				call %CHECKWINVER%
+			) else if not "%SYSTEMINFO%" == "%GETSYSTEMINFO%" (
+				call %CHECKWINVER%
+			) else if not "%XBL%" == "%GETXBL%" (
+				call %CHECKWINVER%
+			)
+		) else if "%downloadstockselect%" == "2" (
+			if not "%ABL%" == "%GETABL%" (
+				call %ABORTSCRIPT%
+			) else if not "%BOOT%" == "%GETBOOT%" (
+				call %ABORTSCRIPT%
+			) else if not "%BOX%" == "%GETBOX%" (
+				call %ABORTSCRIPT%
+			) else if not "%CDA%" == "%GETCDA%%" (
+				call %ABORTSCRIPT%
+			) else if not "%DSP%" == "%GETDSP%" (
+				call %ABORTSCRIPT%
+			) else if not "%ELABEL%" == "%GETELABEL%" (
+				call %ABORTSCRIPT%
+			) else if not "%GPT0%" == "%GETGPT0%" (
+				call %ABORTSCRIPT%
+			) else if not "%HIDDEN%" == "%GETHIDDEN%" (
+				call %ABORTSCRIPT%
+			) else if not "%KEYSTORE%" == "%GETKEYSTORE%" (
+				call %ABORTSCRIPT%
+			) else if not "%LOGDUMP%" == "%GETLOGDUMP%" (
+				call %ABORTSCRIPT%
+			) else if not "%MISC%" == "%GETMISC%" (
+				call %ABORTSCRIPT%
+			) else if not "%MODEM%" == "%GETMODEM%" (
+				call %ABORTSCRIPT%
+			) else if not "%PERSIST%" == "%GETPERSIST%" (
+				call %ABORTSCRIPT%
+			) else if not "%SPLASH2%" == "%GETSPLASH2%" (
+				call %ABORTSCRIPT%
+			) else if not "%SSD%" == "%GETSSD%" (
+				call %ABORTSCRIPT%
+			) else if not "%SUTINFO%" == "%GETSUTINFO%" (
+				call %ABORTSCRIPT%
+			) else if not "%SYSTEM%" == "%SYSTEM%" (
+				call %ABORTSCRIPT%
+			) else if not "%SYSTEMOTHER%" == "%GETSYSTEMOTHER%" (
+				call %ABORTSCRIPT%
+			) else if not "%SYSTEMINFO%" == "%GETSYSTEMINFO%" (
+				call %ABORTSCRIPT%
+			) else if not "%XBL%" == "%GETXBL%" (
+				call %ABORTSCRIPT%
+			)
+		)
+	)
+)
+
+:: Check 7-Zip version
+if "%FASTBOOTNEEDED%" == "no" (
+	if "%optionselect%" == "1" (
+		if "%downloadstockselect%" == "1" (
+			call %ZIP7ZIPCHECKSHA%
+			call %CHECK7ZIP%
+		)
+	)
+)
+
+:: Ask for download & install 7Zip
+if "%ZIP7ZIPNEEDED%" == "yes" (
+	call %DOWNLOAD7ZIPMESSAGE%
+	choice /n /c:12 %1
+	if errorlevel 1 set "zipquestion=1"
+	if errorlevel 2 set "zipquestion=2"
+)
+
+:: Asking for downloading 7Zip when needed
+if "%ZIP7ZIPNEEDED%" == "yes" (
+	if "%zipquestion%" == "1" (
+		call "%ASK7ZIPDOWNLOAD%"
+		call "%CONTINUE%"
+		call "%YESNO%"
+		choice /n /c:12 %1
+		if errorlevel 1 set "zipdownloadquestion=1"
+		if errorlevel 2 set "zipdownloadquestion=2"
+	) else  if "%zipquestion%" == "2" (	
+		call %WRONG7ZIP%
+		timeout /t 10
+		call %ABORTSCRIPT%
+	)
+)
+
+:: Download 7Zip
+if "%ZIP7ZIPNEEDED%" == "yes" (
+	if "%zipquestion%" == "1" (
+		if "%zipdownloadquestion%" == "1" (
+			if "%WINVER%" == "6" (
+				call %LOGO%
+				powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"	
+				curl -L --connect-timeout 10 %TGHURL%/%TGHREPO%/%TGHDLURL%/%TGHTAG%/%ZIP7ZIP% --output %ZIP7ZIP%
+				set "CHECKSUM=80C8DDB819A6EC7EE4D71D1F8D4650F757D6B85A792AC76F22511C8BBB30BF3A"
+				for /f "usebackq" %%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%ZIP7ZIP%' | Select-Object -ExpandProperty Hash"`) do set GETCHECKSUM=%%A
+			) else if "%WINVER%" == "10" (
+				call %LOGO%
+				powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"	
+				curl -L --connect-timeout 10 %TGHURL%/%TGHREPO%/%TGHDLURL%/%TGHTAG%/%ZIP7ZIP% --output %ZIP7ZIP%
+				set "CHECKSUM=80C8DDB819A6EC7EE4D71D1F8D4650F757D6B85A792AC76F22511C8BBB30BF3A"
+				for /f "usebackq" %%A in (`powershell -command "Get-FileHash -Algorithm SHA256 '%ZIP7ZIP%' | Select-Object -ExpandProperty Hash"`) do set GETCHECKSUM=%%A
+			)
+		) else if "%zipdownloadquestion%" == "2" (
+			call %WRONG7ZIP%
+			timeout /t 10
+			call %ABORTSCRIPT%
+		)	
+	)
+)
+
+
+:: Install 7Zip
+if "%ZIP7ZIPNEEDED%" == "yes" (
+    if "%zipquestion%" == "1" (
+        if "%zipdownloadquestion%" == "1" (
+            if "%CHECKSUM%" == "%GETCHECKSUM%" (
+                if "%WINVER%" == "6" (
+                    call %LOGO%
+                    powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"	
+                    powershell -command "Expand-Archive -Path '%ZIP7ZIP%' -DestinationPath '7zip'"
+					del %ZIP7ZIP%
+                )else if "%WINVER%" == "10" (
+                    call %LOGO%
+                    powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"	
+                    powershell -command "Expand-Archive -Path '%ZIP7ZIP%' -DestinationPath '7zip'"
+					del %ZIP7ZIP%
+                )
+            ) else if not "%CHECKSUM%" == "%GETCHECKSUM%" (
+				call "%BROKEN7ZARCHIVE%"
+				timeout /t 10
+				call "%ABORTSCRIPT%"
+			)
+        )
+    )
+)
+
+:: Check if 7Zip is installed sucessfully
+if "%ZIP7ZIPNEEDED%" == "yes" (
+    if "%zipquestion%" == "1" (
+        if "%zipdownloadquestion%" == "1" (
+			call %ZIP7ZIPCHECKSHA%
+			call %CHECK7ZIP%
+		)
+	)
+)
+
+if "%downloadstockselect%" == "1" (
+	if "%ZIP7ZIPNEEDED%" == "no" (
+		timeout /t 0
+	) else if "%ZIP7ZIPNEEDED%" == "yes" ( 
+		call "%WRONG7ZIP%"
+		timeout /t 10
+		call %ABORTSCRIPT%
+	)
+)
+
+:: Download Stock-ROM-Images 
+if "%downloadstockselect%" == "1" (
+	if "%ZIP7ZIPNEEDED%" == "no" (
+		call %LOGO%
+		powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"	
+		curl -L --connect-timeout 10 %TGHURL%/%TGHREPO%/%TGHDLURL%/%TGHTAG%/Stock.7z --output Stock.7z
+		set "CHECKSUM=371D7C8555064E1D00936C5EA605979EB1547B87C42D43EB959328C75A3D06A7"
+		for /f "usebackq" %%A in (`powershell -command "Get-FileHash -Algorithm SHA256 'Stock.7z' | Select-Object -ExpandProperty Hash"`) do set GETCHECKSUM=%%A
+	)
+)
+
+:: Check & unpack Stock-ROM
+if "%downloadstockselect%" == "1" (
+	if "%ZIP7ZIPNEEDED%" == "no" (
+		if "%CHECKSUM%" == "%GETCHECKSUM%" (
+			rmdir /s /q ROM
+			powershell -command "7zip/7z.exe x 'Stock.7z' -oROM
+			call %CHECKSTOCKIMAGES%
+			del Stock.7z
+		) else if not "%CHECKSUM%" == "%GETCHECKSUM%" (
+			call %BROKENARCHIVE%
+			timeout /t 5
+			call %ABORTSCRIPT%
+		)
+	)
+)
+				
+:: Check if GPT-Table already exist 					
+:: Set GPT variable		
+if "%optionselect%" == "2" (
+call %GETGPTSTOCK%
+)
+
+if "%optionselect%" == "2" (			
+	if "%GPT0%" == "%GPTSTOCK%" (
+		set "GPT=STOCK"
+	)
+)
+
+:: Ask for download GPT-Table
+if "%optionselect%" == "2" (			
+	if "%GPT0%" == "%GPTSTOCK%" (
+		timeout /t 0
+	) else if not "%GPT0%" == "%GPTSTOCK%" (
+		call "%DOWNLOADGPT0MESSAGE%"
+		call "%CONTINUE%"
+		call "%YESNO%"
+		choice /n /c:12 %1
+		if errorlevel 1 set "gpt0downloadquestion=1"
+		if errorlevel 2 set "gpt0downloadquestion=2"
+	)	
+)		
+
+:: Download GPT-Table
+if "%optionselect%" == "2" (			
+	if "%GPT0%" == "%GPTSTOCK%" (
+		timeout /t 0
+	) else if not "%GPT0%" == "%GPTSTOCK%" (
+		if "%gpt0downloadquestion%" == "1" (
+			call "%LOGO%"
+			mkdir ROM
+			powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"	
+			curl -L --connect-timeout 10 %TGHURL%/%TGHREPO%/%TGHDLURL%/%TGHTAG%/gpt_both0_Stock.bin --output ROM/gpt_both0.bin
+		) else if "%gpt0downloadquestion%" == "2" (
+			call %ABORTSCRIPT%
+		)
+	)	
+)	
+	
+:: Check GPT-Table for corruption
+if "%optionselect%" == "2" (
+	call %STOCKGPTGETSHA%
+)
+
+if "%optionselect%" == "2" (
+	if "%SHA256SUMGPT0%" == "%GETSHA256SUMGPT0%" (
+		call %GOODGPT%
+		timeout /t 5
+		set "FLASHMODE=GPT"
+	) else if not "%SHA256SUMGPT0%" == "%GETSHA256SUMGPT0%" (
+		call "%BROKENGPT%
+		timeout /t 10
+		call %ABORTSCRIPT
+	)
+)	
+
+:: Check Stock-ROM files
+if "%optionselect%" == "1" (
+	if "%ABL%" == "%GETABL%" (
+		if "%BOOT%" == "%GETBOOT%" (
+			if "%BOX%" == "%GETBOX%" (
+				if "%CDA%" == "%GETCDA%" (
+					if "%DSP%" == "%GETDSP%" (
+						if "%ELABEL%" == "%GETELABEL%" (
+							if "%GPT0%" == "%GETGPT0%" (
+								if "%HIDDEN%" == "%GETHIDDEN%" (
+									if "%KEYSTORE%" == "%GETKEYSTORE%" (
+										if "%LOGDUMP%" == "%GETLOGDUMP%" (
+											if "%MISC%" == "%GETMISC%" (
+												if "%MODEM%" == "%GETMODEM%" (
+													if "%PERSIST%" == "%GETPERSIST%" (
+														if "%SPLASH2%" == "%GETSPLASH2%" (
+															if "%SSD%" == "%GETSSD%" (
+																if "%SUTINFO%" == "%GETSUTINFO%" (
+																	if "%SYSTEM%" == "%GETSYSTEM%" (
+																		if "%SYSTEMOTHER%" == "%GETSYSTEMOTHER%" (
+																			if "%SYSTEMINFO%" == "%GETSYSTEMINFO%" (
+																				if "%XBL%" == "%GETXBL%" (
+																					call %GOODSTOCK%
+																					set "FLASHMODE=Stock"
+																					timeout /t 5
+																				) else if not "%XBL%" == "%GETXBL%" (
+																					call %BROKENSTOCK%
+																					timeout /t 10
+																					call %ABORTSCRIPT%
+																				)
+																			) else if not "%SYSTEMINFO%" == "%GETSYSTEMINFO%" (
+																				call %BROKENSTOCK%
+																				timeout /t 10
+																				call %ABORTSCRIPT%
+																			)
+																		) else if not "%SYSTEMOTHER%" == "%GETSYSTEMOTHER%" (
+																			call %BROKENSTOCK%
+																			timeout /t 10
+																			call %ABORTSCRIPT%
+																		)
+																	) else if not "%SYSTEM%" == "%GETSYSTEM%" (
+																		call %BROKENSTOCK%
+																		timeout /t 10
+																		call %ABORTSCRIPT%
+																	)
+																) else if not "%SUTINFO%" == "%GETSUTINFO%" (
+																	call %BROKENSTOCK%
+																	timeout /t 10
+																	call %ABORTSCRIPT%
+																)
+															) else if not "%SSD%" == "%GETSSD%" (
+																call %BROKENSTOCK%
+																timeout /t 10
+																call %ABORTSCRIPT%
+															)
+														) else if not "%SPLASH2%" == "%GETSPLASH2%" (
+															call %BROKENSTOCK%
+															timeout /t 10
+															call %ABORTSCRIPT%
+														)
+													) else if not "%PERSIST%" == "%GETPERSIST%" (
+														call %BROKENSTOCK%
+														timeout /t 10
+														call %ABORTSCRIPT%
+													)
+												) else if not "%MODEM%" == "%GETMODEM%" (
+													call %BROKENSTOCK%
+													timeout /t 10
+													call %ABORTSCRIPT%
+												)
+											) else if not "%MISC%" == "%GETMISC%" (
+												call %BROKENSTOCK%
+												timeout /t 10
+												call %ABORTSCRIPT%
+											)
+										) else if not "%LOGDUMP%" == "%GETLOGDUMP%" (
+											call %BROKENSTOCK%
+											timeout /t 10
+											call %ABORTSCRIPT%
+										)
+									) else if not "%KEYSTORE%" == "%GETKEYSTORE%" (
+										call %BROKENSTOCK%
+										timeout /t 10
+										call %ABORTSCRIPT%
+									)
+								) else if not "%HIDDEN%" == "%GETHIDDEN%" (
+									call %BROKENSTOCK%
+									timeout /t 10
+									call %ABORTSCRIPT%
+								)
+							) else if not "%GPT0%" == "%GETGPT0%" (
+								call %BROKENSTOCK%
+								timeout /t 10
+								call %ABORTSCRIPT%
+							)
+						) else if not "%ELABEL%" == "%GETELABEL%" (
+							call %BROKENSTOCK%
+							timeout /t 10
+							call %ABORTSCRIPT%
+						)
+					) else if not "%DSP%" == "%GETDSP%" (
+						call %BROKENSTOCK%
+						timeout /t 10
+						call %ABORTSCRIPT%
+					)
+				) else if not "%CDA%" == "%GETCDA%" (
+					call %BROKENSTOCK%
+					timeout /t 10
+					call %ABORTSCRIPT%
+				)
+			) else if not "%BOX%" == "%GETBOX%" (
+				call %BROKENSTOCK%
+				timeout /t 10
+				call %ABORTSCRIPT%
+			)
+		) else if not "%BOOT%" == "%GETBOOT%" (
+			call %BROKENSTOCK%
+			timeout /t 10
+			call %ABORTSCRIPT%
+		)
+	) else if not "%ABL%" == "%GETABL%" (
+		call %BROKENSTOCK%
+		timeout /t 10
+		call %ABORTSCRIPT%
+	) 	
+)																					
+
+:: Welcome-Screen
+call %WELCOMESCREEN%
+
+:: Warning-Screen 1
+call %WARNINGSCREEN1%
+
+:: Warning screen 2
+call %WARNINGSCREEN2%
+
+:: Ask for flash Stock-ROM // GPT-Table
+if "%FLASHMODE%" == "Stock" (
+	call %ASKFORSTOCK%
+	call %YESNO%
+	choice /n /c:12 %1
+	if errorlevel 1 set "askromgpt=1"
+	if errorlevel 2 set "askromgpt=2"
+) else if "%FLASHMODE%" == "GPT" (
+	call %ASKFORGPT%
+	call %YESNO%
+	choice /n /c:12 %1
+	if errorlevel 1 set "askromgpt=1"
+	if errorlevel 2 set "askromgpt=2"
+)
+
+:: Ask for be sure to flash Stock-ROM //GPT-Table
+if "%askromgpt%" == "1" (
+	if "%FLASHMODE%" == "Stock" (
+		call %FLASHSSURE%
+		call %YESNO%
+		choice /n /c:12 %1
+		if errorlevel 1 set "askflashsure=1"
+		if errorlevel 2 set "askflashsure=2"
+	) else if "%FLASHMODE%" == "GPT" (
+		call %FLASHSSURE%
+		call %YESNO%
+		choice /n /c:12 %1
+		if errorlevel 1 set "askflashsure=1"
+		if errorlevel 2 set "askflashsure=2"
+	)	
+) else if "%askromgpt%" == "2" (
+	call %ABORTSCRIPT%
+)
+
+:: Instruction
+if "%askromgpt%" == "1" (
+	if "%askflashsure%" == "1" (
+		if "%FLASHMODE%" == "Stock" (
+			call %INSTRUCTION%
+			choice /n /c:F %1
+			if errorlevel 1 set "proceedflash=F"
+		) else if "%FLASHMODE%" == "GPT" (
+			call %INSTRUCTION%
+			choice /n /c:F %1
+			if errorlevel 1 set "proceedflash=F"
+		)
+	)	
+)
+
+:: Last warning screen
+if "%askromgpt%" == "1" (
+	if "%askflashsure%" == "1" (
+		if "%proceedflash%" == "F" (
+			if "%FLASHMODE%" == "Stock" (
+				set "FLASHREADY=yes"
+				call %LASTWARNINGSTOCK%
+			) else if "%FLASHMODE%" == "GPT" (
+				set "FLASHREADY=yes"
+				call %LASTWARNINGGPT%
+			)
+		)
+	)
+)
+
+:: Get Serialnumber
+if "%FLASHMODE%" == "Stock" (
+	if "%FLASHREADY%" == "yes" (
+		call %GETSERIALNO%
+	)
+) else 	if "%FLASHMODE%" == "GPT" (
+	if "%FLASHREADY%" == "yes" (
+		call %GETSERIALNO%
+	)
+)
+
+:: Check if device if NB1
+if "%FLASHREADY%" == "yes" (
+	if "%FLASHMODE%" == "Stock" (	
+		call %CHECKDEVICE%
+	) else if "%FLASHMODE%" == "GPT" (
+		call %CHECKDEVICE%
+	)	
+)		
+
+:: Check if bootloader is unlocked
+if "%DEVICEIS%" == "NB1" (
+	if "%FLASHREADY%" == "yes" (
+		if "%FLASHMODE%" == "Stock" (
+			call %BOOTLOADERUNLOCK%
+		) else if "%FLASHMODE%" == "GPT" (
+			call %BOOTLOADERUNLOCK%
+		)	
+	)
+)
+
+if "%DEVICEIS%" == "NB1" (
+	if "%FLASHREADY%" == "yes" (
+		if "%FLASHMODE%" == "Stock" (
+			if "%CHECKBOOTLOADERUNLOCK%" == "%UNLOCKED1%" (
+				call %LOGO%
+				call %BOOTLOADERCRITICALUNLOCKMESSAGE%
+				timeout /t 2
+				powershell -command "& {Write-Host 'Bootloader is unlocked :-)' -ForegroundColor Green -BackgroundColor White}"
+				timeout /t 3
+			) else if not "%CHECKBOOTLOADERUNLOCK%" == "%UNLOCKED1%" (
+				call %LOGO%
+				call %BOOTLOADERUNLOCKMESSAGE%
+				timeout /t 2
+				powershell -command "& {Write-Host 'Bootloader is locked :-(' -ForegroundColor Red -BackgroundColor White}"
+				timeout /t 3
+				call %ABORTSCRIPT%
+			)	
+		)  else if "%FLASHMODE%" == "GPT" (
+			if "%CHECKBOOTLOADERUNLOCK%" == "%UNLOCKED1%" (
+				call %LOGO%
+				call %BOOTLOADERCRITICALUNLOCKMESSAGE%
+				timeout /t 2
+				powershell -command "& {Write-Host 'Bootloader is unlocked :-)' -ForegroundColor Green -BackgroundColor White}"
+				timeout /t 3
+			) else if not "%CHECKBOOTLOADERUNLOCK%" == "%UNLOCKED1%" (
+				call %LOGO%
+				call %BOOTLOADERUNLOCKMESSAGE%
+				timeout /t 2
+				powershell -command "& {Write-Host 'Bootloader is locked :-(' -ForegroundColor Red -BackgroundColor White}"
+				timeout /t 3
+				call %ABORTSCRIPT%
+			)	
+		)	
+	)
+) 
+
+:: Check if bootloader is critical unlocked
+if "%DEVICEIS%" == "NB1" (
+	if "%FLASHREADY%" == "yes" (
+		if "%CHECKBOOTLOADERUNLOCK%" == "%UNLOCKED1%" (
+			if "%FLASHMODE%" == "Stock" (
+				call %BOOTLOADERCRITICALUNLOCK%
+			) else if "%FLASHMODE%" == "GPT" (
+				call %BOOTLOADERCRITICALUNLOCK%
+			)	
+		)
+	)	
+)		
+
+if "%FLASHREADY%" == "yes" (
+	if "%FLASHMODE%" == "Stock" (
+		if "%CHECKBOOTLOADERCRITICALUNLOCK%" == "%UNLOCKED2%" (
+			call %LOGO%
+			call %BOOTLOADERCRITICALUNLOCKMESSAGE%
+			timeout /t 2
+			powershell -command "& {Write-Host 'Bootloader is critical unlocked :-)' -ForegroundColor Green -BackgroundColor White}"
+			timeout /t 3
+			set "UNLOCKED=yes"
+		) else if not "%CHECKBOOTLOADERCRITICALUNLOCK%" == "%UNLOCKED2%" (
+			call %LOGO%
+			call %BOOTLOADERCRITICALUNLOCKMESSAGE%
+			timeout /t 2
+			powershell -command "& {Write-Host 'Bootloader is critical locked :-(' -ForegroundColor Red -BackgroundColor White}"
+			timeout /t 3			
+			call %ABORTSCRIPT%
+		)
+	) else if "%FLASHMODE%" == "GPT" (
+		if "%CHECKBOOTLOADERCRITICALUNLOCK%" == "%UNLOCKED2%" (
+			call %LOGO%
+			call %BOOTLOADERCRITICALUNLOCKMESSAGE%
+			timeout /t 2
+			powershell -command "& {Write-Host 'Bootloader is critical unlocked :-)' -ForegroundColor Green -BackgroundColor White}"
+			timeout /t 3
+			set "UNLOCKED=yes"
+		) else if not "%CHECKBOOTLOADERCRITICALUNLOCK%" == "%UNLOCKED2%" (
+			call %LOGO%
+			call %BOOTLOADERCRITICALUNLOCKMESSAGE%
+			timeout /t 2
+			powershell -command "& {Write-Host 'Bootloader is critical locked :-(' -ForegroundColor Red -BackgroundColor White}"
+			timeout /t 3			
+			call %ABORTSCRIPT%
+		)
+	)
+)
+
+:: Flash bootloader
+if "%FLASHMODE%" == "Stock" (
+	if "%FLASHREADY%" == "yes" (
+		if "%UNLOCKED%" == "yes" (
+			call %FLASHBOOTLOADER%
+		)	
+	)
+)	
+
+:: Reboot to bootloader after flashing Bootloader
+if "%FLASHMODE%" == "Stock" (
+	if "%FLASHREADY%" == "yes" (
+		if "%UNLOCKED%" == "yes" (
+			call %REBOOT_BOOTLOADER%
+		)
+	)
+)
+
+:: Flash GPT-Table
+if "%FLASHREADY%" == "yes" (
+	if "%UNLOCKED%" == "yes" (
+		if "%FLASHMODE%" == "Stock" (
+			call %FLASHGPT%
+		) else if "%FLASHMODE%" == "GPT" (
+			call %FLASHGPT%
+		)
+	)
+)
+
+:: Reboot to bootloader after flashing Bootloader
+if "%FLASHREADY%" == "yes" (
+	if "%UNLOCKED%" == "yes" (
+		if "%FLASHMODE%" == "Stock" (
+			call %REBOOT_BOOTLOADER%
+		) else if "%FLASHMODE%" == "GPT" (
+			call %REBOOT_BOOTLOADER%
+		)
+	)
+)
+
+:: Flash Stock-ROM-Images
+if "%FLASHMODE%" == "Stock" (
+	if "%FLASHREADY%" == "yes" (
+		if "%UNLOCKED%" == "yes" (
+			call %FLASHSTOCKIMAGES%
+		)
+	)
+)
+
+:: Well done
+if "%FLASHREADY%" == "yes" (
+	if "%UNLOCKED%" == "yes" (
+		if "%FLASHMODE%" == "Stock" (
+			call %WELLDONE%
+		) else if "%FLASHMODE%" == "GPT" (
+			call %WELLDONE%
+		)
+	)
+)
+
+:: Set boot-slot to slot A
+if "%FLASHREADY%" == "yes" (
+	if "%UNLOCKED%" == "yes" (
+		if "%FLASHMODE%" == "Stock" (
+			call %SETBOOTSLOT%
+		) else if "%FLASHMODE%" == "GPT" (
+			call %SETBOOTSLOT%
+		)
+	)
+)
+
+:: Erase Userdata
+if "%FLASHMODE%" == "Stock" (
+	if "%FLASHREADY%" == "yes" (
+		if "%UNLOCKED%" == "yes" (
+			call %ERASEUSERDATA%
+		)
+	)
+)	
+
+:: Reboot to system after flashing images
+if "%FLASHMODE%" == "Stock" (
+	if "%FLASHREADY%" == "yes" (
+		if "%UNLOCKED%" == "yes" (
+			call %REBOOT_SYSTEM%
+		)
+	)
+)	
+
+:: Finish :-D
+if "%FLASHREADY%" == "yes" (
+	if "%UNLOCKED%" == "yes" (
+		if "%FLASHMODE%" == "Stock" (
+			call %FINISHSTOCK%
+		) else if "%FLASHMODE%" == "GPT" (
+			call %FINISHGPT%
+		)
+	)
 )
