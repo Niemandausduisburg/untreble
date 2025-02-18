@@ -797,13 +797,13 @@ set "FINISHGPT=FINISHGPT.bat"
 ) >"%FINISHGPT%"
 
 :: Ask for check for updates
-set "ASKUPDATE=ASKUPDATE.bat"
+set "ASKFORCHECKUPDATE=ASKFORCHECKUPDATE.bat"
 (
 	echo call %%UNTREBLELOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Do you want to check for updates?' -ForegroundColor Black -BackgroundColor White}"
 	echo call %%YESNO%%
-) >"%ASKUPDATE%"
+) >"%ASKFORCHECKUPDATE%"
 
 :: Check for Update
 set "CHECKFORUPDATE=CHECKFORUPDATE.bat"
@@ -895,7 +895,7 @@ set "CLEANUP=CLEANUP.bat"
 	echo set "ASKFORSTOCK="
 	echo set "ASKFORUPDATE="
 	echo set "askromgpt="
-	echo set "ASKUPDATE="
+	echo set "ASKFORCHECKUPDATE="
 	echo set "askusertosearchupdate="
 	echo set "askusertoupdate="
 	echo set "BOOT="
@@ -1095,7 +1095,7 @@ set "CLEANUP=CLEANUP.bat"
 	echo del ASKFORGPT.bat
 	echo del ASKFORSTOCK.bat
 	echo del ASKFORUPDATE.bat
-	echo del ASKUPDATE.bat
+	echo del ASKFORCHECKUPDATE.bat
 	echo del BOOTLOADERCRITICALUNLOCK.bat
 	echo del BOOTLOADERCRITICALUNLOCKMESSAGE.bat
 	echo del BOOTLOADERUNLOCK.bat
@@ -1166,7 +1166,7 @@ set "CLEANUP=CLEANUP.bat"
 :: Start Untreble
 :: Prepare
 :: Ask for checking for Update
-call %ASKUPDATE%
+call %ASKFORCHECKUPDATE%
 choice /n /c:12 %1
 if errorlevel 1 set "askusertosearchupdate=1"
 if errorlevel 2 set "askusertosearchupdate=2"
