@@ -800,7 +800,7 @@ set "FINISHGPT=FINISHGPT.bat"
 set "ASKFORCHECKUPDATE=ASKFORCHECKUPDATE.bat"
 (
 	echo call %%UNTREBLELOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
+	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Do you want to check for updates?' -ForegroundColor Black -BackgroundColor White}"
 	echo call %%YESNO%%
 ) >"%ASKFORCHECKUPDATE%"
@@ -809,7 +809,7 @@ set "ASKFORCHECKUPDATE=ASKFORCHECKUPDATE.bat"
 set "CHECKFORUPDATE=CHECKFORUPDATE.bat"
 (
 	echo call %%UNTREBLELOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
+	echo powershell -command "& {Write-Host '' -ForegroundColor Black -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Checking for updates...' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
 	echo curl -L --connect-timeout 10 %%UNGHRAWURL%%/%%UNGHREPO%%/%%UNGHUPDURL%%/%%UNGHBRANCH%%/%%UNGHUPDFILE%% --output temp.bat
@@ -826,7 +826,7 @@ set "COMPAREUPDATE=COMPAREUPDATE.bat"
 set "ASKFORUPDATE=ASKFORUPDATE.bat"
 (
 	echo call %%UNTREBLELOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
+	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Update found!!!' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Do you want update?' -ForegroundColor Black -BackgroundColor White}"
 	echo call %%YESNO%%
@@ -848,7 +848,7 @@ set "SELCECTNOUPDATE=SELCECTNOUPDATE.bat"
 set "NOUPDATEFOUND=NOUPDATEFOUND.bat"
 (
 	echo call %%UNTREBLELOGO%%
-	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Untreble is already up-to-date :-)' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'Untreble will continue now.' -ForegroundColor Black -BackgroundColor White}"
