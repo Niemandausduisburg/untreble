@@ -126,15 +126,6 @@ echo set "SYSTEMINFO=ROM/systeminfo.img"
 echo set "XBL=ROM/xbl.elf"
 ) > "%STOCKIMAGES%" 
 
-:: GPT
-:: Should
-set "GPT0=ROM/gpt_both0.bin"
-:: Get
-set "GETGPTSTOCK=GETGPTSTOCK.bat"
-(
-	echo @echo off
-	echo if exist "%%GPT0%%" set "GPTSTOCK=ROM/gpt_both0.bin"
-) > "%GETGPTSTOCK%"
 
 :: Stockimages destinations
 set "CHECKSTOCKIMAGES=CHECKSTOCKIMAGES.bat"
@@ -947,7 +938,6 @@ set "CLEANUP=CLEANUP.bat"
 	echo set "GETDSP="
 	echo set "GETELABEL="
 	echo set "GETGPT0="
-	echo set "GETGPTSTOCK="
 	echo set "GETHIDDEN="
 	echo set "GETKEYSTORE="
 	echo set "GETLOGDUMP="
@@ -987,7 +977,6 @@ set "CLEANUP=CLEANUP.bat"
 	echo set "GPT0="
 	echo set "gpt0downloadquestion="
 	echo set "GPT="
-	echo set "GPTSTOCK="
 	echo set "GTP0SIZE="
 	echo set "HIDDEN="
 	echo set "INSTRUCTION="
@@ -1126,7 +1115,6 @@ set "CLEANUP=CLEANUP.bat"
 	echo del FLASHGPT.bat
 	echo del FLASHSSURE.bat
 	echo del FLASHSTOCKIMAGES.bat
-	echo del GETGPTSTOCK.bat
 	echo del GETSERIALNO.bat
 	echo del GOODGPT.bat
 	echo del GOODSTOCK.bat
@@ -1308,13 +1296,16 @@ if "%FASTBOOTNEEDED%" == "no" (
 	if errorlevel 2 set "optionselect=2"
 )
 
-:: Check if the Stock-ROM-images are already exists
+:: Check if the Stock-ROM-images or GPT-Table are already exists
 if "%FASTBOOTNEEDED%" == "no" (
 	if "%optionselect%" == "1" (
 		call %STOCKIMAGES%
 		call %CHECKSTOCKIMAGES%
+	) else if "%optionselect%" == "2" (
+		call %STOCKIMAGES%
+		call %CHECKSTOCKIMAGES%
 	)
-)
+)	
 
 :: Ask for download Stock-ROM if not exist
 if "%FASTBOOTNEEDED%" == "no" (
@@ -1727,25 +1718,14 @@ if "%downloadstockselect%" == "1" (
 			call %ABORTSCRIPT%
 		)
 	)
-)
-				
-:: Check if GPT-Table already exist 					
-:: Set GPT variable		
-if "%optionselect%" == "2" (
-call %GETGPTSTOCK%
-)
+)	
 
-if "%optionselect%" == "2" (			
-	if "%GPT0%" == "%GPTSTOCK%" (
-		set "GPT=STOCK"
-	)
-)
 
 :: Ask for download GPT-Table
 if "%optionselect%" == "2" (			
-	if "%GPT0%" == "%GPTSTOCK%" (
+	if "%GPT0%" == "%GETGPT0%" (
 		timeout /t 0
-	) else if not "%GPT0%" == "%GPTSTOCK%" (
+	) else if not "%GPT0%" == "%GETGPT0%" (
 		call "%DOWNLOADGPT0MESSAGE%"
 		call "%CONTINUE%"
 		call "%YESNO%"
@@ -1757,9 +1737,9 @@ if "%optionselect%" == "2" (
 
 :: Download GPT-Table
 if "%optionselect%" == "2" (			
-	if "%GPT0%" == "%GPTSTOCK%" (
+	if "%GPT0%" == "%GETGPT0%" (
 		timeout /t 0
-	) else if not "%GPT0%" == "%GPTSTOCK%" (
+	) else if not "%GPT0%" == "%GETGPT0%" (
 		if "%gpt0downloadquestion%" == "1" (
 			call "%UNTREBLELOGO%"
 			mkdir ROM
