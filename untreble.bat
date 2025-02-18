@@ -789,7 +789,7 @@ set "FINISHGPT=FINISHGPT.bat"
 	echo powershell -command "& {Write-Host 'Partition-Table successfully flashed :-)' -ForegroundColor Green -BackgroundColor White}"
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
 	echo powershell -command "& {Write-Host 'You need to flash a Stock-Firmware with NOST or OST LA to boot your device!!!' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'I don''t recommend using OSTRemote or it will destroy your device :-(' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'I don''t recommend using OSTRemote or it will brick your device :-(' -ForegroundColor Red -BackgroundColor White}"
 	echo timeout /t 10
 	echo cls
 	echo color 0F
@@ -810,7 +810,7 @@ set "CHECKFORUPDATE=CHECKFORUPDATE.bat"
 (
 	echo call %%UNTREBLELOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Green -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'Check for updates' -ForegroundColor Black -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'Checking for updates...' -ForegroundColor Black -BackgroundColor White}"
 	echo timeout /t 2
 	echo curl -L --connect-timeout 10 %%UNGHRAWURL%%/%%UNGHREPO%%/%%UNGHUPDURL%%/%%UNGHBRANCH%%/%%UNGHUPDFILE%% --output temp.bat
 ) >"%CHECKFORUPDATE%"
@@ -861,7 +861,7 @@ set "UPDATE=UPDATE.bat"
 (
 	echo call %%UNTREBLELOGO%%
 	echo powershell -command "& {Write-Host '' -ForegroundColor Red -BackgroundColor White}"
-	echo powershell -command "& {Write-Host 'Update Untreble...' -ForegroundColor Red -BackgroundColor White}"
+	echo powershell -command "& {Write-Host 'Updating Untreble...' -ForegroundColor Red -BackgroundColor White}"
 	echo timeout /t 5
     echo del untreble.bat
     echo ren temp.bat untreble.bat
