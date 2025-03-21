@@ -166,10 +166,6 @@ $CompareUpdate = {
 	# Use Get-FileHash for getting SHA256Sums 
 	$Script:Revertold = (Get-FileHash -Algorithm SHA256 -Path "$($UntrebleGithubConfig.UpdateFile)" -ErrorAction SilentlyContinue).Hash
 	$Script:Revertnew = (Get-FileHash -Algorithm SHA256 -Path "$($UntrebleGithubConfig.Untrebletempfile)" -ErrorAction SilentlyContinue).Hash
-	Write-Host "$Untreblefile" -ForegroundColor Red -BackgroundColor White
-	Write-Host "$Untrebletempfile" -ForegroundColor Red -BackgroundColor White
-	Write-Host "$Revertold" -ForegroundColor Red -BackgroundColor White
-	Write-Host "$Revertnew" -ForegroundColor Red -BackgroundColor White
 }
 
 # When no update is selected
