@@ -45,18 +45,23 @@ $Nokialogo = {
 
 # Global Variables 
 # Untreble-Github-Repo
-$GithubURL = "https://github.com/Niemandausduisburg"
-$GithubRAWURL = "https://raw.githubusercontent.com/Niemandausduisburg"
-$GithubRepo = "untreble"
-$GithubupdateURL = "refs/heads"
-$GithubdownloadURL = "releases/download"
-$GithubTag = "untreble-needed-files"
-$GithubBranch = "main"
-$Githubupdatefile = "untreble.ps1"
 
-# Update tempfile
-$Untreblefile = "untreble.ps1"
-$Untrebletempfile = "temp.ps1"
+$UntrebleGithubConfig = @{
+	URL = "https://github.com"
+	RAWURL = "https://raw.githubusercontent.com"
+	User = "Niemandausduisburg"
+    Repo = "untreble"
+    UpdateURL = "refs/heads"
+    DownloadURL = "releases/download"
+    DependenciesTag = "untreble-needed-files"
+    Branch = "main"
+    UpdateFile = "untreble.ps1"
+	Untrebletempfile = "temp.ps1"
+}
+
+$UpdateURL = "$($UntrebleGithubConfig.RAWURL)/$($UntrebleGithubConfig.User)/$($UntrebleGithubConfig.Repo)/$($UntrebleGithubConfig.UpdateURL)/$($UntrebleGithubConfig.Branch)/$($UntrebleGithubConfig.Updatefile)"
+$GithubDependenciesURL = "$($UntrebleGithubConfig.URL)/$($UntrebleGithubConfig.User)/$($UntrebleGithubConfig.Repo)/$($UntrebleGithubConfig.DownloadURL)/$($UntrebleGithubConfig.DependenciesTag)"
+
 
 # Abortscript Variable
 $Abortscript = {
@@ -150,7 +155,7 @@ $CheckforUpdate = {
 	Start-Sleep -Seconds 2
 	# Use PS Invoke-WebRequest for Downlaods
 	try {
-		Invoke-WebRequest -Uri "$GithubRAWURL/$GithubRepo/$GithubupdateURL/$GithubBranch/$Githubupdatefile" -OutFile "$Untrebletempfile" -ErrorAction Stop
+		Invoke-WebRequest -Uri "$UpdateURL" -OutFile "$($UntrebleGithubConfig.Untrebletempfile)" -ErrorAction Stop
 	} catch {
 		Start-Sleep -Seconds 0
 	}
@@ -159,8 +164,8 @@ $CheckforUpdate = {
 # Compare Scripts
 $CompareUpdate = {
 	# Use Get-FileHash for getting SHA256Sums 
-	$Script:Revertold = (Get-FileHash -Algorithm SHA256 -Path "$Untreblefile" -ErrorAction SilentlyContinue).Hash
-	$Script:Revertnew = (Get-FileHash -Algorithm SHA256 -Path "$Untrebletempfile" -ErrorAction SilentlyContinue).Hash
+	$Script:Revertold = (Get-FileHash -Algorithm SHA256 -Path "$($UntrebleGithubConfig.UpdateFile)" -ErrorAction SilentlyContinue).Hash
+	$Script:Revertnew = (Get-FileHash -Algorithm SHA256 -Path "$($UntrebleGithubConfig.Untrebletempfile)" -ErrorAction SilentlyContinue).Hash
 	Write-Host "$Untreblefile" -ForegroundColor Red -BackgroundColor White
 	Write-Host "$Untrebletempfile" -ForegroundColor Red -BackgroundColor White
 	Write-Host "$Revertold" -ForegroundColor Red -BackgroundColor White
@@ -174,7 +179,7 @@ $SelectnoUpdate = {
 	Write-Host "Don't cry when something is not working." -ForegroundColor Red -BackgroundColor White
 	Write-Host "Joke xD" -ForegroundColor Red -BackgroundColor White
 	Write-Host "When something is not working check for Updates." -ForegroundColor Red -BackgroundColor White
-    Remove-Item -Force "$Untrebletempfile" -ErrorAction Ignore	
+    Remove-Item -Force "$($UntrebleGithubConfig.Untrebletempfile)" -ErrorAction Ignore	
 	Start-Sleep -Seconds 5
 }
 
@@ -194,7 +199,7 @@ $Noupdatefound = {
 	Write-Host "Untreble is already up-to-date :-)" -ForegroundColor Green -BackgroundColor White
 	Write-Host "" -ForegroundColor Green -BackgroundColor White
 	Write-Host "Untreble will continue now." -ForegroundColor Black -BackgroundColor White
-    Remove-Item -Force "$Untrebletempfile" -ErrorAction Ignore
+    Remove-Item -Force "$($UntrebleGithubConfig.Untrebletempfile)" -ErrorAction Ignore
 	Start-Sleep -Seconds 5
 }
 
@@ -204,10 +209,10 @@ $Update = {
     Write-Host "" -ForegroundColor Red -BackgroundColor White	
     Write-Host "Updating Untreble..." -ForegroundColor Red -BackgroundColor White	
     Start-Sleep -Seconds 5
-    Remove-Item -Force "$Untreblefile" -ErrorAction Ignore
-    Rename-Item -Force "$Untrebletempfile" "$Untreblefile"
+    Remove-Item -Force "$($UntrebleGithubConfig.UpdateFile)" -ErrorAction Ignore
+    Rename-Item -Force "$($UntrebleGithubConfig.Untrebletempfile)" "$($UntrebleGithubConfig.UpdateFile)"
     & $AfterUpdate
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$Untreblefile"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$($UntrebleGithubConfig.UpdateFile)"
     exit 0
 }
 
@@ -1064,15 +1069,6 @@ $Cleanup = {
 	Remove-Variable -Name "GetSYSTEMINFO" -Scope Script -ErrorAction Ignore
 	Remove-Variable -Name "GetSYSTEMOTHER" -Scope Script -ErrorAction Ignore
 	Remove-Variable -Name "GetXBL" -Scope Script -ErrorAction Ignore
-	Remove-Variable -Name "GithubBranch" -ErrorAction Ignore
-	Remove-Variable -Name "GithubRAWURL" -ErrorAction Ignore
-	Remove-Variable -Name "GithubRepo" -ErrorAction Ignore
-	Remove-Variable -Name "GithubTag" -ErrorAction Ignore
-	Remove-Variable -Name "GithubURL" -ErrorAction Ignore
-	Remove-Variable -Name "GithubdownloadURL" -ErrorAction Ignore
-	Remove-Variable -Name "GithubupdateURL" -ErrorAction Ignore
-	Remove-Variable -Name "Githubupdatefile" -ErrorAction Ignore
-	Remove-Variable -Name "Githubupdatefile" -ErrorAction Ignore
 	Remove-Variable -Name "GoodGPT" -ErrorAction Ignore	
 	Remove-Variable -Name "GoodStock" -ErrorAction Ignore	
 	Remove-Variable -Name "HIDDEN" -Scope Script -ErrorAction Ignore
@@ -1139,7 +1135,8 @@ $Cleanup = {
 	Remove-Variable -Name "Stockimages" -ErrorAction Ignore
 	Remove-Variable -Name "StockromSize" -ErrorAction Ignore
 	Remove-Variable -Name "Unlocked" -ErrorAction Ignore
-	Remove-Variable -Name "Unlocked" -Scope Script -ErrorAction Ignore	
+	Remove-Variable -Name "Unlocked" -Scope Script -ErrorAction Ignore
+	Remove-Variable -Name "UntrebleGithubConfig" -ErrorAction Ignore	
 	Remove-Variable -Name "Untreblelogo" -ErrorAction Ignore	
 	Remove-Variable -Name "Update" -ErrorAction Ignore
 	Remove-Variable -Name "Version7ZIP" -ErrorAction Ignore
@@ -1249,7 +1246,7 @@ if ($Fastbootneeded -eq "yes") {
 	if ($SDKChoice -eq "1") {
 		if ($SDKDownloadChoice -eq "1") {
 			& $Untreblelogo
-			Invoke-WebRequest -Uri "$GithubURL/$GithubRepo/$GithubdownloadURL/$GithubTag/$SDKZipfile" -OutFile "$SDKZipfile" -ErrorAction Stop
+			Invoke-WebRequest -Uri "$GithubDependenciesURL/$SDKZipfile" -OutFile "$SDKZipfile" -ErrorAction Stop
 			$GetSDKChecksum = (Get-FileHash -Algorithm SHA256 -Path $SDKZipfile -ErrorAction SilentlyContinue).Hash
 		} elseif ($SDKDownloadChoice -eq "2") {
 			& $Abortscript
@@ -1361,7 +1358,7 @@ if ($Zip7ZipNeeded -eq "yes") {
 if ($Zip7ZipNeeded -eq "yes") {
 	if ($Zipdownloadquestion -eq "1") {
 		& $Untreblelogo
-		Invoke-WebRequest -Uri "$GithubURL/$GithubRepo/$GithubdownloadURL/$GithubTag/$ZIP7ZIP" -OutFile "$ZIP7ZIP" -ErrorAction Stop
+		Invoke-WebRequest -Uri "$GithubDependenciesURL/$ZIP7ZIP" -OutFile "$ZIP7ZIP" -ErrorAction Stop
 		$GetZip7ZIPPackageSHA = (Get-FileHash -Algorithm SHA256 -Path $ZIP7ZIP -ErrorAction SilentlyContinue).Hash
 	} elseif ($Zipdownloadquestion -eq "2") {
 		& $Wrong7ZIP
@@ -1408,7 +1405,7 @@ if ($Zipdownloadquestion -eq "1") {
 if ($Optionselect -eq "1") {
 	if ($Zip7ZipNeeded -eq "no") {
 		& $Untreblelogo
-		Invoke-WebRequest -Uri "$GithubURL/$GithubRepo/$GithubdownloadURL/$GithubTag/Stock.7z" -OutFile "Stock.7z" -ErrorAction Stop
+		Invoke-WebRequest -Uri "$GithubDependenciesURL/Stock.7z" -OutFile "Stock.7z" -ErrorAction Stop
 		$GetSHA256SUMStockRom = (Get-FileHash -Algorithm SHA256 -Path 'Stock.7z' -ErrorAction SilentlyContinue).Hash
 	}
 }
@@ -1422,7 +1419,7 @@ if ($Fastbootneeded -eq "no") {
 			if ($GPT0DownloadQuestion -eq "1") {
 				& $Untreblelogo
 				New-Item -Path 'ROM' -ItemType Directory -ErrorAction Ignore
-				Invoke-WebRequest -Uri "$GithubURL/$GithubRepo/$GithubdownloadURL/$GithubTag/gpt_both0_Stock.bin" -OutFile "ROM/gpt_both0.bin" -ErrorAction Stop
+				Invoke-WebRequest -Uri "$GithubDependenciesURL/gpt_both0_Stock.bin" -OutFile "ROM/gpt_both0.bin" -ErrorAction Stop
 			} else {
 				& $Abortscript
 			}
