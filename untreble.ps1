@@ -21,11 +21,9 @@ $Untreblelogo = {
         "██    ██ ██  ██ ██    ██    ██   ██ ██      ██   ██ ██      ██     ",
         " ██████  ██   ████    ██    ██   ██ ███████ ██████  ███████ ███████"
     )
-
+    
     # Ausgabe des Logos mit Farben
-    foreach ($line in $logo) {
-        Write-Host $line -ForegroundColor Magenta -BackgroundColor White
-    }
+    $logo | ForEach-Object { Write-Host $_ -ForegroundColor Magenta -BackgroundColor White }
 }
 
 # Nokia Logo
@@ -42,9 +40,7 @@ $Nokialogo = {
     )
 
     # Ausgabe des Logos mit Farben
-    foreach ($line in $logo) {
-        Write-Host $line -ForegroundColor Magenta -BackgroundColor White
-    }
+    $logo | ForEach-Object { Write-Host $_ -ForegroundColor Magenta -BackgroundColor White }
 }
 
 # Global Variables 
