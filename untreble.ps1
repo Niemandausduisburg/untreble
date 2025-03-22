@@ -1440,6 +1440,13 @@ if ($Optionselect -eq "1") {
 }
 
 # Check if Stock-ROM ist extracted / GPT-Table downloaded sucessfully
+if ($Fastbootneeded -eq "no") {
+	if (($Optionselect -eq "1") -or ($Optionselect -eq "2")) {
+		& $Stockimages
+		& $Checkstockimages
+	}
+}
+
 if ($Optionselect -eq "1") {
 	if (($ABL -eq $GetABL) -and ($BOOT -eq $GetBOOT) -and ($BOX -eq $GetBOX) -and ($CDA -eq $GetCDA) -and ($DSP -eq $GETDSP) -and ($ELABEL -eq $GetELABEL) -and ($GPT0 -eq $GetGPT0) -and ($HIDDEN -eq $GetHIDDEN) -and ($KEYSTORE -eq $GetKEYSTORE) -and ($LOGDUMP -eq $GetLOGDUMP) -and ($MISC -eq $GetMISC) -and ($MODEM -eq $GetMODEM) -and ($PERSIST -eq $GetPERSIST) -and ($SPLASH2 -eq $GetSPLASH2) -and ($SSD -eq $GetSSD) -and ($SUTINFO -eq $GetSUTINFO) -and ($SYSTEM -eq $GetSYSTEM) -and ($SYSTEMOTHER -eq $GetSYSTEMOTHER) -and ($SYSTEMINFO -eq $SYSTEMINFO) -and ($XBL -eq $GetXBL)) {
 		& $AllStockfilesExist
