@@ -85,22 +85,11 @@ $WindowsName = (Get-CimInstance -ClassName Win32_OperatingSystem).Caption
 
 $CheckWindowsVersion = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	if (($WindowsVersion -eq "6") -or ($WindowsVersion -eq "10")) {
-		Write-Host "Your Windows version is $WindowsName." -ForegroundColor Red -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Your Windows version is supported by Untreble :-)" -ForegroundColor Green -BackgroundColor White
-		Write-Host "Untreble will start now." -ForegroundColor Green -BackgroundColor White
+	if ($WindowsVersion -in @("6", "10")) {
+		Write-Host "`nYour Windows version is $WindowsName." -ForegroundColor Red -BackgroundColor White; Write-Host "`nYour Windows version is supported by Untreble :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "Untreble will start now." -ForegroundColor Green -BackgroundColor White
 		Start-Sleep -Seconds 5
-	} elseif (($WindowsVersion -ne "6") -or ($WindowsVersion -ne "10")) {
-		Write-Host "Your Windows version is $WindowsName." -ForegroundColor Red -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Your Windows version is unsupprted by Untreble :-(" -ForegroundColor Red -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Please upgrade to Windows 7 or higher." -ForegroundColor Red -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Please report it here to get support:" -ForegroundColor Red -BackgroundColor White -NoNewline
-		Write-Host "https://t.me/HMD_Nokia_8" -ForegroundColor Blue -BackgroundColor White
+	} else {
+		Write-Host "`nYour Windows version is $WindowsName." -ForegroundColor Red -BackgroundColor White; Write-Host "`nYour Windows version is unsupprted by Untreble :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "`nPlease upgrade to Windows 7 or higher." -ForegroundColor Red -BackgroundColor White; Write-Host "`nPlease report it here to get support:" -ForegroundColor Red -BackgroundColor White -NoNewline; Write-Host "https://t.me/HMD_Nokia_8" -ForegroundColor Blue -BackgroundColor White
 		Start-Sleep -Seconds 10
 		& $Abortscript
 	}	
@@ -110,48 +99,30 @@ $CheckWindowsVersion = {
 $PowerShellVersion = $PSVersionTable.PSVersion.Major
 
 $CheckPowerShellVersion = {
-	& $Untreblelogo
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	if ($PowerShellVersion -ge "5") {
-		Write-Host "Your PowerShell version is $PowerShellVersion." -ForegroundColor Red -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Your PowerShell version is supported by Untreble :-)" -ForegroundColor Green -BackgroundColor White
-		Write-Host "Untreble will start now." -ForegroundColor Green -BackgroundColor White
-		Start-Sleep -Seconds 5
-	} elseif ($PowerShellVersion -lt "5") {	
-		Write-Host "Your PowerShell version is $PowerShellVersion." -ForegroundColor Red -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Your PowerShell version is unsupprted by Untreble :-(" -ForegroundColor Red -BackgroundColor White
-		Write-Host "Untreble requires PowerShell 5 or higher." -ForegroundColor Red -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "You can download PowerShell 5 here: " -ForegroundColor Red -BackgroundColor White
-		Write-Host "https://aka.ms/wmf5download" -ForegroundColor Blue -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Or you can try PowerShell 7.5 from here: " -ForegroundColor Red -BackgroundColor White
-		Write-Host "https://github.com/PowerShell/PowerShell/releases/tag/v7.5.0" -ForegroundColor Blue -BackgroundColor White
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Please report it here to get support:" -ForegroundColor Red -BackgroundColor White -NoNewline
-		Write-Host "https://t.me/HMD_Nokia_8" -ForegroundColor Blue -BackgroundColor White
-		Start-Sleep -Seconds 10
-		& $Abortscript
-	}	
+    & $Untreblelogo
+    if ([int]$PowerShellVersion -ge 5) {
+        Write-Host "`nYour PowerShell version is $PowerShellVersion.`n`nYour PowerShell version is supported by Untreble :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "Untreble will start now." -ForegroundColor Green -BackgroundColor White
+        Start-Sleep -Seconds 5
+    }
+    else {
+        Write-Host "`nYour PowerShell version is $PowerShellVersion.`n`nYour PowerShell version is unsupported by Untreble :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Untreble requires PowerShell 5 or higher.`n" -ForegroundColor Red -BackgroundColor White; Write-Host "You can download PowerShell 5 here: " -ForegroundColor Red -BackgroundColor White; Write-Host "https://aka.ms/wmf5download" -ForegroundColor Blue -BackgroundColor White; Write-Host "`nOr you can try PowerShell 7.5 from here:" -ForegroundColor Red -BackgroundColor White; Write-Host "https://github.com/PowerShell/PowerShell/releases/tag/v7.5.0" -ForegroundColor Blue -BackgroundColor White; Write-Host "`nPlease report it here to get support: " -ForegroundColor Red -BackgroundColor White -NoNewline; Write-Host "https://t.me/HMD_Nokia_8" -ForegroundColor Blue -BackgroundColor White
+        Start-Sleep -Seconds 10
+        & $Abortscript
+    }
 }
 
 #Prepare Untreble
 # Ask for check for updates
 $AskforcheckUpdate = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Do you want to check for updates?" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nDo you want to check for updates?" -ForegroundColor Black -BackgroundColor White
 	& $YesNo
 }
 
 # Check for Update
 $CheckforUpdate = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Checking for updates" -ForegroundColor Black -BackgroundColor White
-	Write-Host "WindowsVersion: $WindowsVersion" -ForegroundColor Red -BackgroundColor White 
+	Write-Host "`nChecking for updates" -ForegroundColor Black -BackgroundColor White; Write-Host "WindowsVersion: $WindowsVersion" -ForegroundColor Red -BackgroundColor White 
 	Start-Sleep -Seconds 2
 	# Use PS Invoke-WebRequest for Downlaods
 	try {
@@ -171,10 +142,7 @@ $CompareUpdate = {
 # When no update is selected
 $SelectnoUpdate = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Red -BackgroundColor White
-	Write-Host "Don't cry when something is not working." -ForegroundColor Red -BackgroundColor White
-	Write-Host "Joke xD" -ForegroundColor Red -BackgroundColor White
-	Write-Host "When something is not working check for Updates." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nDon't cry when something is not working." -ForegroundColor Red -BackgroundColor White; Write-Host "Joke xD" -ForegroundColor Red -BackgroundColor White; Write-Host "When something is not working check for Updates." -ForegroundColor Red -BackgroundColor White
     Remove-Item -Force "$($UntrebleGithubConfig.Untrebletempfile)" -ErrorAction Ignore	
 	Start-Sleep -Seconds 5
 }
@@ -182,19 +150,14 @@ $SelectnoUpdate = {
 # Ask for Update
 $AskforUpdate = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Red -BackgroundColor White
-	Write-Host "Update found!!!" -ForegroundColor Red -BackgroundColor White
-	Write-Host "Do you want update?" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nUpdate found!!!" -ForegroundColor Red -BackgroundColor White; Write-Host "Do you want update?" -ForegroundColor Black -BackgroundColor White
 	& $YesNo
 }
 
 # When no updated found
 $Noupdatefound = {
-	& $Untreblelogo
-	Write-Host "" -ForegroundColor Green -BackgroundColor White	
-	Write-Host "Untreble is already up-to-date :-)" -ForegroundColor Green -BackgroundColor White
-	Write-Host "" -ForegroundColor Green -BackgroundColor White
-	Write-Host "Untreble will continue now." -ForegroundColor Black -BackgroundColor White
+	& $Untreblelogo	
+	Write-Host "`nUntreble is already up-to-date :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "`nUntreble will continue now." -ForegroundColor Black -BackgroundColor White
     Remove-Item -Force "$($UntrebleGithubConfig.Untrebletempfile)" -ErrorAction Ignore
 	Start-Sleep -Seconds 5
 }
@@ -202,8 +165,7 @@ $Noupdatefound = {
 # Update Untreble
 $Update = {
     & $Untreblelogo
-    Write-Host "" -ForegroundColor Red -BackgroundColor White	
-    Write-Host "Updating Untreble..." -ForegroundColor Red -BackgroundColor White	
+    Write-Host "`nUpdating Untreble..." -ForegroundColor Red -BackgroundColor White	
     Start-Sleep -Seconds 5
     Remove-Item -Force "$($UntrebleGithubConfig.UpdateFile)" -ErrorAction Ignore
     Rename-Item -Force "$($UntrebleGithubConfig.Untrebletempfile)" "$($UntrebleGithubConfig.UpdateFile)"
@@ -219,8 +181,7 @@ $IsArchitecture = "64-bit"
 # Wrong Architecture
 $WrongArchitecture = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Wrong architecture :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Untreble is only for x86_64 (64Bit) architecture." -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Red -BackgroundColor White; Write-Host "Untreble will be closed after 10 seconds." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nWrong architecture :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Untreble is only for x86_64 (64Bit) architecture." -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Red -BackgroundColor White; Write-Host "Untreble will be closed after 10 seconds." -ForegroundColor Red -BackgroundColor White
 	Start-Sleep -Seconds 10
 	& $Abortscript
 }
@@ -238,8 +199,7 @@ $CheckADBTools = {
 	# Use Get-FileHash for getting SHA256Sums 
 	$Script:GetFastbootChecksum = (Get-FileHash -Algorithm SHA256 -Path $Fastboot -ErrorAction SilentlyContinue).Hash
 	$Script:GetADBChecksum = (Get-FileHash -Algorithm SHA256 -Path $ADB -ErrorAction SilentlyContinue).Hash
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Check if Android-SDK-Platform-Tools are installed." -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nCheck if Android-SDK-Platform-Tools are installed." -ForegroundColor Black -BackgroundColor White
 	Start-Sleep -Seconds 3
 	if (($GetFastbootChecksum -eq $FastbootChecksum) -and ($GetADBChecksum -eq $ADBChecksum)) {
 		$Script:Fastbootneeded = "no"
@@ -255,8 +215,7 @@ $SDKChecksum = "D076031AF58F4413B373E055737340528B8C0A68FA39DF62B3FBFA361D93AD87
 
 $SDKMessage = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "It will download and install Android-SDK-Platform-Tools ($SDKSize)" -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nIt will download and install Android-SDK-Platform-Tools ($SDKSize)" -ForegroundColor Red -BackgroundColor White
 	& $Continue
 	& $YesNo
 }
@@ -264,98 +223,55 @@ $SDKMessage = {
 # Broken ADB-Tools Archive
 $BrokenADBTools = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Android-SDK-Platform-Tools installation package is broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please download it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nAndroid-SDK-Platform-Tools installation package is broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please download it again." -ForegroundColor Red -BackgroundColor White
 	Start-Sleep -Seconds 10
 	& $Abortscript
 }
 
-# Stockimages
+# Define Stockimages
 $Stockimages = {
-	$Script:ABL = "ROM/abl.elf"
-	$Script:BOOT = "ROM/boot.img"
-	$Script:BOX = "ROM/box.bin"
-	$Script:CDA = "ROM/cda.img"
-	$Script:DSP = "ROM/dsp.bin"
-	$Script:ELABEL = "ROM/elabel.bin"
-	$Script:GPT0 = "ROM/gpt_both0.bin"
-	$Script:HIDDEN = "ROM/hidden.img"
-	$Script:KEYSTORE = "ROM/keystore.bin"
-	$Script:LOGDUMP = "ROM/logdump.bin"
-	$Script:MISC = "ROM/misc.bin"
-	$Script:MODEM = "ROM/modem.bin"
-	$Script:PERSIST = "ROM/persist.img"
-	$Script:SPLASH2 = "ROM/splash2.img"
-	$Script:SSD = "ROM/ssd.bin"
-	$Script:SUTINFO = "ROM/sutinfo.img"
-	$Script:SYSTEM = "ROM/system.img"
-	$Script:SYSTEMOTHER = "ROM/system_other.img"
-	$Script:SYSTEMINFO = "ROM/systeminfo.img"
-	$Script:XBL = "ROM/xbl.elf"
+    $files = @{
+        ABL         = "abl.elf"
+        BOOT        = "boot.img"
+        BOX         = "box.bin"
+        CDA         = "cda.img"
+        DSP         = "dsp.bin"
+        ELABEL      = "elabel.bin"
+        GPT0        = "gpt_both0.bin"
+        HIDDEN      = "hidden.img"
+        KEYSTORE    = "keystore.bin"
+        LOGDUMP     = "logdump.bin"
+        MISC        = "misc.bin"
+        MODEM       = "modem.bin"
+        PERSIST     = "persist.img"
+        SPLASH2     = "splash2.img"
+        SSD         = "ssd.bin"
+        SUTINFO     = "sutinfo.img"
+        SYSTEM      = "system.img"
+        SYSTEMOTHER = "system_other.img"
+        SYSTEMINFO  = "systeminfo.img"
+        XBL         = "xbl.elf"
+    }
+
+    foreach ($key in $files.Keys) {
+    $filePath = "ROM/$($files[$key])"
+    Set-Variable -Name $key -Value $filePath -Scope Script
+	}
 }
 
-# Stockimages destinations
+# Get-Images
 $Checkstockimages = {
-	if (Test-Path $ABL) {
-		$Script:GetABL = "ROM/abl.elf"
-	}
-	if (Test-Path $BOOT) {
-		$Script:GetBOOT = "ROM/boot.img"
-	}
-    if (Test-Path $BOX) {
-		$Script:GetBOX = "ROM/box.bin"
-	}
-	if (Test-Path $CDA) {
-		$Script:GetCDA = "ROM/cda.img"
-	}
-	if (Test-Path $DSP) {
-		$Script:GetDSP = "ROM/dsp.bin"
-	}
-	if (Test-Path $ELABEL) {
-		$Script:GetELABEL = "ROM/elabel.bin"
-	}
-	if (Test-Path $GPT0) {
-		$Script:GetGPT0 = "ROM/gpt_both0.bin"
-	}
-	if (Test-Path $HIDDEN) {
-		$Script:GetHIDDEN = "ROM/hidden.img"
-	}
-	if (Test-Path $KEYSTORE) {
-		$Script:GetKEYSTORE = "ROM/keystore.bin"
-	}
-	if (Test-Path $LOGDUMP) {
-		$Script:GetLOGDUMP = "ROM/logdump.bin"
-	}
-	if (Test-Path $MISC) {
-		$Script:GetMISC = "ROM/misc.bin"
-	}
-	if (Test-Path $MODEM) {
-		$Script:GetMODEM = "ROM/modem.bin"
-	}
-	if (Test-Path $PERSIST) {
-		$Script:GetPERSIST = "ROM/persist.img"
-	}
-	if (Test-Path $SPLASH2) {
-		$Script:GetSPLASH2 = "ROM/splash2.img"
-	}
-	if (Test-Path $SSD) {
-		$Script:GetSSD = "ROM/ssd.bin"
-	}
-	if (Test-Path $SUTINFO) {
-		$Script:GetSUTINFO = "ROM/sutinfo.img"
-	}
-	if (Test-Path $SYSTEM) {
-		$Script:GetSYSTEM = "ROM/system.img"
-	}
-	if (Test-Path $SYSTEMOTHER) {
-		$Script:GetSYSTEMOTHER = "ROM/system_other.img"
-	}
-	if (Test-Path $SYSTEMINFO) {
-		$Script:GetSYSTEMINFO = "ROM/systeminfo.img"
-	}
-	if (Test-Path $XBL) {
-		$Script:GetXBL = "ROM/xbl.elf"
-	}
+    $files = @(
+        "ABL", "BOOT", "BOX", "CDA", "DSP", "ELABEL", "GPT0", "HIDDEN", "KEYSTORE", "LOGDUMP",
+        "MISC", "MODEM", "PERSIST", "SPLASH2", "SSD", "SUTINFO", "SYSTEM", "SYSTEMOTHER", "SYSTEMINFO", "XBL"
+    )
+
+    foreach ($name in $files) {
+        $var = Get-Variable -Name $name -Scope Script -ErrorAction SilentlyContinue
+        if ($var -and (Test-Path $var.Value)) {
+            Set-Variable -Name ("Get" + $name) -Scope Script -Value $var.Value
+        }
+    }
 }
 
 # Stockimages SHA256Sums
@@ -380,71 +296,25 @@ $SHA256SUMSYSTEMINFO = "193DF877B5CE43D0F31AE269B72514512E515CCFD94DB7E2DDD5616E
 $SHA256SUMSYSTEMOTHER = "0A4C4A6FB396270A35B595D9C00403B9A4B3643B8934D856109BEC661F8F7C2A"
 $SHA256SUMXBL = "A5328530F2F26F556844A6B8DFCF02FED6FA3BA4B9357A55CFD474FB2C0DDF1A"
 
-# Stockimages get SHA256Sums
-$StockgetSHA = {
+# Check SHA256SUms for Stockimages
 	# Use Get-FileHash for getting SHA256Sums on Windows 10/11
 	# Use certutil for getting SHA256Sums on Windows 7/8
 	# Suppress error message
-	if (Test-Path $ABL) {
-		$Script:GetSHA256SUMABL = (Get-FileHash -Algorithm SHA256 -Path $ABL -ErrorAction SilentlyContinue).Hash	
-	}
-	if (Test-Path $BOOT) {
-		$Script:GetSHA256SUMBOOT = (Get-FileHash -Algorithm SHA256 -Path $BOOT -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $BOX) {
-		$Script:GetSHA256SUMBOX = (Get-FileHash -Algorithm SHA256 -Path $BOX -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $CDA) {
-		$Script:GetSHA256SUMCDA = (Get-FileHash -Algorithm SHA256 -Path $CDA -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $DSP) {
-		$Script:GetSHA256SUMDSP = (Get-FileHash -Algorithm SHA256 -Path $DSP -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $ELABEL) {
-		$Script:GetSHA256SUMELABEL = (Get-FileHash -Algorithm SHA256 -Path $ELABEL -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $GPT0) {
-		$Script:GetSHA256SUMGPT0 = (Get-FileHash -Algorithm SHA256 -Path $GPT0 -ErrorAction SilentlyContinue).Hash	
-	}
-	if (Test-Path $HIDDEN) {
-		$Script:GetSHA256SUMHIDDEN = (Get-FileHash -Algorithm SHA256 -Path $HIDDEN -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $KEYSTORE) {
-		$Script:GetSHA256SUMKEYSTORE = (Get-FileHash -Algorithm SHA256 -Path $KEYSTORE -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $LOGDUMP) {
-		$Script:GetSHA256SUMLOGDUMP = (Get-FileHash -Algorithm SHA256 -Path $LOGDUMP -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $MISC) {
-		$Script:GetSHA256SUMMISC = (Get-FileHash -Algorithm SHA256 -Path $MISC -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $MODEM) {
-		$Script:GetSHA256SUMMODEM = (Get-FileHash -Algorithm SHA256 -Path $MODEM -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $PERSIST) {
-		$Script:GetSHA256SUMPERSIST = (Get-FileHash -Algorithm SHA256 -Path $PERSIST -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $SPLASH2) {
-		$Script:GetSHA256SUMSPLASH2 = (Get-FileHash -Algorithm SHA256 -Path $SPLASH2 -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $SSD) {
-		$Script:GetSHA256SUMSSD = (Get-FileHash -Algorithm SHA256 -Path $SSD -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $SUTINFO) {
-		$Script:GetSHA256SUMSUTINFO = (Get-FileHash -Algorithm SHA256 -Path $SUTINFO -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $SYSTEM) {
-		$Script:GetSHA256SUMSYSTEM = (Get-FileHash -Algorithm SHA256 -Path $SYSTEM -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $SYSTEMOTHER) {
-		$Script:GetSHA256SUMSYSTEMOTHER = (Get-FileHash -Algorithm SHA256 -Path $SYSTEMOTHER -ErrorAction SilentlyContinue ).Hash
-	}
-	if (Test-Path $SYSTEMINFO) {
-			$Script:GetSHA256SUMSYSTEMINFO = (Get-FileHash -Algorithm SHA256 -Path $SYSTEMINFO -ErrorAction SilentlyContinue).Hash
-	}
-	if (Test-Path $XBL) {
-			$Script:GetSHA256SUMXBL = (Get-FileHash -Algorithm SHA256 -Path $XBL -ErrorAction SilentlyContinue).Hash		
-	}
+$StockgetSHA = {
+    $files = @(
+        "ABL", "BOOT", "BOX", "CDA", "DSP", "ELABEL", "GPT0", "HIDDEN", "KEYSTORE", "LOGDUMP",
+        "MISC", "MODEM", "PERSIST", "SPLASH2", "SSD", "SUTINFO", "SYSTEM", "SYSTEMOTHER", "SYSTEMINFO", "XBL"
+    )
+
+    foreach ($name in $files) {
+        $filePath = Get-Variable -Name $name -Scope Script -ErrorAction SilentlyContinue
+        if ($filePath -and (Test-Path $filePath.Value)) {
+            # SHA256-Hash berechnen
+            $hash = (Get-FileHash -Algorithm SHA256 -Path $filePath.Value -ErrorAction SilentlyContinue).Hash
+            # Dynamische Zuweisung der Hash-Werte
+            Set-Variable -Name ("GetSHA256SUM" + $name) -Value $hash -Scope Script
+        }
+    }
 }
 
 # Check 7Zip Version
@@ -470,29 +340,25 @@ $Check7ZIP = {
 # Broken Stock-ROM-Archive
 $BrokenROMArchive = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Seems like the Stock-ROM-archive is broken  :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please download it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nSeems like the Stock-ROM-archive is broken  :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please download it again." -ForegroundColor Red -BackgroundColor White
 }
 
 # Broken 7Zip Archive
 $Broken7ZArchive = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "7Zip installation package is broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please download it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`n7Zip installation package is broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please download it again." -ForegroundColor Red -BackgroundColor White
 }
 
 # 7Zip Archive not able to install
 $Wrong7ZIP = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Could not install 7Zip which is required for Untreble :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please try it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nCould not install 7Zip which is required for Untreble :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please try it again." -ForegroundColor Red -BackgroundColor White
 }
 
 # ADB-TOOLS not able to install
 $WrongADBTools = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Could not install Android-SDK-Platform-Tools which are required for Untreble :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please try it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nCould not install Android-SDK-Platform-Tools which are required for Untreble :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please try it again." -ForegroundColor Red -BackgroundColor White
 	Start-Sleep -Seconds 10
 	& $Abortscript
 }
@@ -500,64 +366,55 @@ $WrongADBTools = {
 # All Stock-ROM files are existing
 $AllStockfilesExist = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "All files from Stock-ROM are exist :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nAll files from Stock-ROM are exist :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
 }
 
 # Some Files are missing after extract Stock-ROM Package
 $AllStockfilesdontExist = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Some files from Stock-Rom are missing :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please delete the ROM folder and try it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nSome files from Stock-Rom are missing :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please delete the ROM folder and try it again." -ForegroundColor Red -BackgroundColor White
 }
 
 # Broken files in Stock-ROM
 $BrokenStock = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Seems like some files from Stock-ROM are broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please delete the ROM folder and download the package again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nSeems like some files from Stock-ROM are broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please delete the ROM folder and download the package again." -ForegroundColor Red -BackgroundColor White
 }
 
 # All files in Stock-ROM are fine
 $GoodStock = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "All files from Stock-ROM are fine :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nAll files from Stock-ROM are fine :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
 }
 
 # GPT0 found
 $GPT0Exist = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "GPT-Table exist :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nGPT-Table exist :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
 }
 
 # GPT0 missing
 $GPT0dontExist = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "GPT-Table was not found :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please delete the ROM folder and try it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nGPT-Table was not found :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please delete the ROM folder and try it again." -ForegroundColor Red -BackgroundColor White
 }
 
 # Good GPT-Table
 $GoodGPT = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "GPT-Table is fine:-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nGPT-Table is fine:-)" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue." -ForegroundColor Green -BackgroundColor White
 }
 
 # Broken GPT-Table
 $BrokenGPT = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Seems like GPT-Table is broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please remove gpt_both0.bin in ROM folder and download it again." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nSeems like GPT-Table is broken :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "Please remove gpt_both0.bin in ROM folder and download it again." -ForegroundColor Red -BackgroundColor White
 }
 
 # SDK missing
 $NoSDK = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Android-SDK-Platform-Tools were not found or are outdated :-( " -ForegroundColor Red -BackgroundColor White; Write-Host "They are required to use Untreble." -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White; Write-Host "Do you want to download and install them?" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nAndroid-SDK-Platform-Tools were not found or are outdated :-( " -ForegroundColor Red -BackgroundColor White; Write-Host "They are required to use Untreble." -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White; Write-Host "Do you want to download and install them?" -ForegroundColor Black -BackgroundColor White
 	& $YesNo
 }
 
@@ -569,8 +426,7 @@ $Version7ZIP = "23.01"
 
 $Download7ZIPMessage = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "7Zip not found or wrong version :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Red -BackgroundColor White; Write-Host "It is required to unpack the stock ROM." -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White; Write-Host "Do you want to download and install 7Zip $Version7ZIP ($Size7ZIP)?" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`n7Zip not found or wrong version :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Red -BackgroundColor White; Write-Host "It is required to unpack the stock ROM." -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White; Write-Host "Do you want to download and install 7Zip $Version7ZIP ($Size7ZIP)?" -ForegroundColor Black -BackgroundColor White
 	& $YesNo
 }
 
@@ -582,8 +438,7 @@ $Continue = {
 # Main Menu
 $MainMenu = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Select an option what you want:" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nSelect an option what you want:" -ForegroundColor Black -BackgroundColor White
 }
 	
 # Main Menu - Option 1
@@ -601,8 +456,7 @@ $StockromSize = "1,48GB"
 $SHA256SUMStockRom = "371D7C8555064E1D00936C5EA605979EB1547B87C42D43EB959328C75A3D06A7"
 $DownloadStockROMMessage = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "It will download the Stock-ROM ($StockromSize)" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nIt will download the Stock-ROM ($StockromSize)" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White
 	& $Continue
 	& $YesNo
 }
@@ -611,8 +465,7 @@ $DownloadStockROMMessage = {
 $GPT0Size = "44kb"
 $DownloadGPT0Message = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "It will download the Stock-GPT-Table ($GPT0Size)" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nIt will download the Stock-GPT-Table ($GPT0Size)" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Black -BackgroundColor White
 	& $Continue
 	& $YesNo
 }
@@ -641,16 +494,14 @@ $CheckDevice = {
 # Device is NB1
 $DeviceisNB1 = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Device is a NB1" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue :-)" -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nDevice is a NB1" -ForegroundColor Green -BackgroundColor White; Write-Host "We can continue :-)" -ForegroundColor Green -BackgroundColor White
 	Start-Sleep -Seconds 5
 }
 
 # Device is not NB1
 $DeviceisnotNB1 = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Device is not a NB1" -ForegroundColor Red -BackgroundColor White; Write-Host "We can''t continue :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Red -BackgroundColor White; Write-Host "Script will be closed now." -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nDevice is not a NB1" -ForegroundColor Red -BackgroundColor White; Write-Host "We can''t continue :-(" -ForegroundColor Red -BackgroundColor White; Write-Host "" -ForegroundColor Red -BackgroundColor White; Write-Host "Script will be closed now." -ForegroundColor Red -BackgroundColor White
 	Start-Sleep -Seconds 10
 	& $Abortscript
 }
@@ -713,20 +564,18 @@ $Locked = "false"
 # Flash bootloader
 $Flashbootloader = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Flashing bootloader:" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nFlashing bootloader:" -ForegroundColor Black -BackgroundColor White
 	Start-Sleep -Seconds 2
 	& $Fastboot -s $Serial flash abl_a $ABL
 	& $Fastboot -s $Serial flash abl_b $ABL
 	& $Fastboot -s $Serial flash xbl_a $XBL
-	& $Fastboot -s $Serial flash xbl_a $XBL
+	& $Fastboot -s $Serial flash xbl_b $XBL
 }
 
 # Flash Stock-Images
 $FlashStockImages = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Flashing Stock ROM::" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nFlashing Stock ROM::" -ForegroundColor Black -BackgroundColor White
 	Start-Sleep -Seconds 2
 	& $Fastboot -s $Serial flash boot_a $BOOT
 	& $Fastboot -s $Serial flash boot_b $BOOT	
@@ -756,8 +605,7 @@ $FlashStockImages = {
 # Set boot-slot
 $SetBootSlot = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Switching to Slot A:" -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nSwitching to Slot A:" -ForegroundColor Red -BackgroundColor White
 	Start-Sleep -Seconds 2
 	& $Fastboot -s $Serial --set-active=a
 }	
@@ -765,8 +613,7 @@ $SetBootSlot = {
 # Erase Userdata
 $EraseUserdata = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Erasing Userdata:" -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nErasing Userdata:" -ForegroundColor Red -BackgroundColor White
 	Start-Sleep -Seconds 2
 	& $Fastboot -s $Serial -w
 }	
@@ -774,8 +621,7 @@ $EraseUserdata = {
 # Reboot to bootloader
 $Reboot_Bootloader = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Rebooting device into download mode. DO NOT disconnect your device!" -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nRebooting device into download mode. DO NOT disconnect your device!" -ForegroundColor Red -BackgroundColor White
 	& $Fastboot -s $Serial reboot bootloader
 	Start-Sleep -Seconds 5
 }	
@@ -783,8 +629,7 @@ $Reboot_Bootloader = {
 # Reboot to system
 $Reboot_System = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Rebooting device into system. DO NOT disconnect your device!'" -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nRebooting device into system. DO NOT disconnect your device!'" -ForegroundColor Red -BackgroundColor White
 	& $Fastboot -s $Serial reboot
 	Start-Sleep -Seconds 5
 }	
@@ -792,37 +637,30 @@ $Reboot_System = {
 # Flash GPT-Table
 $FlashGPT = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Magenta -BackgroundColor White
-	Write-Host "Flashing stock partition-table:" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nFlashing stock partition-table:" -ForegroundColor Black -BackgroundColor White
 	Start-Sleep -Seconds 2
 	& $Fastboot -s $Serial flash partition:0 $GPT0
 }
 
 # Check if Bootloader is unlocked message
 $BootloaderunlockMessage = {
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Check if bootloader is unlocked:" -ForegroundColor Black -BackgroundColor White
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nCheck if bootloader is unlocked:`n" -ForegroundColor Black -BackgroundColor White
 }
 
 # Check if Bootloader is critical unlocked message
 $BootloadercriticalunlockMessage = {
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Check if bootloader is critical unlocked:" -ForegroundColor Black -BackgroundColor White
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nCheck if bootloader is critical unlocked:`n" -ForegroundColor Black -BackgroundColor White
 }
 
 # Welcome Screen
 $WelcomeScreen = {
 	if ($FLASHMODE -eq "Stock") {
 		& $Untreblelogo
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "This will flash the Nokia stock ROM (Android 9 / 516A) on your device." -ForegroundColor Black -BackgroundColor White
+		Write-Host "`nThis will flash the Nokia stock ROM (Android 9 / 516A) on your device." -ForegroundColor Black -BackgroundColor White
 		Start-sleep -Seconds 5
 	} elseif ($FLASHMODE -eq "GPT")	{
 		& $Untreblelogo		
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "This will flash the Nokia stock GPT-Table for you for flasing your device with NOST, OST LA, OSTRemote." -ForegroundColor Black -BackgroundColor White
+		Write-Host "`nThis will flash the Nokia stock GPT-Table for you for flasing your device with NOST, OST LA, OSTRemote." -ForegroundColor Black -BackgroundColor White
 		Start-sleep -Seconds 5		
 	}	
 }
@@ -831,11 +669,7 @@ $WelcomeScreen = {
 $WarningScreen1 = {
 	if ($FLASHMODE -eq "Stock" -or $FLASHMODE -eq "GPT") {
 		& $Untreblelogo
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "WARNING!" -ForegroundColor Red -BackgroundColor White
-		Write-Host "MAKE A BACKUP FROM YOUR DATA!" -ForegroundColor Red -BackgroundColor White
-		Write-Host "ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!" -ForegroundColor Red -BackgroundColor White
-		Write-Host "WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!" -ForegroundColor Red -BackgroundColor White
+		Write-Host "`nWARNING!" -ForegroundColor Red -BackgroundColor White; Write-Host "MAKE A BACKUP FROM YOUR DATA!" -ForegroundColor Red -BackgroundColor White; Write-Host "ALL DATA WILL BE LOST AFTER FLASHING (FACTORY RESET)!" -ForegroundColor Red -BackgroundColor White; Write-Host "WE ACCEPT NO LIABILITY IF YOU LOSE DATA OR USE THIS TOOL INCORRECTLY!" -ForegroundColor Red -BackgroundColor White
 		Start-sleep -Seconds 10
 	}
 }
@@ -844,11 +678,7 @@ $WarningScreen1 = {
 $WarningScreen2 = {
 	if ($FLASHMODE -eq "Stock") {
 		& $Untreblelogo		
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "WARNING!" -ForegroundColor Red -BackgroundColor White
-		Write-Host "FLASHING SOME PARTITIONS CAN TAKE SOME TIME (ABOUT 5 MINUTES)." -ForegroundColor Red -BackgroundColor White
-		Write-Host "DO NOT UNPLUG THE USB-CABLE OR CLOSE POWERSHELL OR YOU WILL BRICK YOUR DEVICE!!!" -ForegroundColor Red -BackgroundColor White
-		Write-Host "SOMETIMES POWERSHELL SEEMS TO BE FREZZING. DO NOT ABORT THE PROCESS AND STILL WAITING UNTIL THE PROCESS IS DONE." -ForegroundColor Red -BackgroundColor White
+		Write-Host "`nWARNING!" -ForegroundColor Red -BackgroundColor White; Write-Host "FLASHING SOME PARTITIONS CAN TAKE SOME TIME (ABOUT 5 MINUTES)." -ForegroundColor Red -BackgroundColor White; Write-Host "DO NOT UNPLUG THE USB-CABLE OR CLOSE POWERSHELL OR YOU WILL BRICK YOUR DEVICE!!!" -ForegroundColor Red -BackgroundColor White; Write-Host "SOMETIMES POWERSHELL SEEMS TO BE FREZZING. DO NOT ABORT THE PROCESS AND STILL WAITING UNTIL THE PROCESS IS DONE." -ForegroundColor Red -BackgroundColor White
 		Start-sleep -Seconds 10
 	}
 }
@@ -856,52 +686,39 @@ $WarningScreen2 = {
 # Ask for flash Stock
 $AskforStock = {
 	& $Untreblelogo		
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Are you sure you want to flash Stock ROM?" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nAre you sure you want to flash Stock ROM?" -ForegroundColor Black -BackgroundColor White
 }
 
 # Ask for flash GPT
 $AskforGPT = {
 	& $Untreblelogo		
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Are you sure you want to flash the stock GPT-Table?" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nAre you sure you want to flash the stock GPT-Table?" -ForegroundColor Black -BackgroundColor White
 }	
 
 # Ask for sure flash
 $Flashsure = {
 	& $Untreblelogo		
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Have you read and understand the warnings and are you sure you want to proceed?" -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nHave you read and understand the warnings and are you sure you want to proceed?" -ForegroundColor Black -BackgroundColor White
 }	
 
 # Instruction
 $Instruction = {
 	& $Untreblelogo		
-	Write-Host "" -ForegroundColor Black -BackgroundColor White
-	Write-Host "Boot your device into download-mode (Vol- & Plug-in USB-cable) and connect it to your PC." -ForegroundColor Black -BackgroundColor White
-	Write-Host "Be sure your device is recognized correctly." -ForegroundColor Black -BackgroundColor White
-	Write-Host "Enter " -ForegroundColor Black -BackgroundColor White -NoNewline
-	Write-Host "[f] " -ForegroundColor Red -BackgroundColor White -NoNewline
-	Write-Host "when your device is in download-mode and connected to your PC to proceed." -ForegroundColor Black -BackgroundColor White
+	Write-Host "`nBoot your device into download-mode (Vol- & Plug-in USB-cable) and connect it to your PC." -ForegroundColor Black -BackgroundColor White; Write-Host "Be sure your device is recognized correctly." -ForegroundColor Black -BackgroundColor White; Write-Host "Enter " -ForegroundColor Black -BackgroundColor White -NoNewline; Write-Host "[f] " -ForegroundColor Red -BackgroundColor White -NoNewline; Write-Host "when your device is in download-mode and connected to your PC to proceed." -ForegroundColor Black -BackgroundColor White
 }
 
 # Last warning
 $LastWarning = {
 	if ($FlashMode -eq "Stock") {
 		& $Untreblelogo		
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "ATTENTION!!!" -ForegroundColor Red -BackgroundColor White
-		Write-Host "THE WHOLE FLASHING PROCESS CAN TAKE UP TO 10 MINUTES." -ForegroundColor Red -BackgroundColor White
-		Write-Host "LEAN BACK AND LET IT FLASHING." -ForegroundColor Red -BackgroundColor White
+		Write-Host "`nATTENTION!!!" -ForegroundColor Red -BackgroundColor White; Write-Host "THE WHOLE FLASHING PROCESS CAN TAKE UP TO 10 MINUTES." -ForegroundColor Red -BackgroundColor White; Write-Host "LEAN BACK AND LET IT FLASHING." -ForegroundColor Red -BackgroundColor White
 		Start-Sleep -Seconds 10
 		& $Untreblelogo
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Let's flash and revert back to Stock-ROM :-)" -ForegroundColor Black -BackgroundColor White
+		Write-Host "`nLet's flash and revert back to Stock-ROM :-)" -ForegroundColor Black -BackgroundColor White
 		Start-Sleep -Seconds 5	
 	} elseif ($FlashMode -eq "GPT") {
 		& $Untreblelogo		
-		Write-Host "" -ForegroundColor Black -BackgroundColor White
-		Write-Host "Let's flash and revert back to Stock-GPT-Table :-)" -ForegroundColor Black -BackgroundColor White
+		Write-Host "`nLet's flash and revert back to Stock-GPT-Table :-)" -ForegroundColor Black -BackgroundColor White
 		Start-Sleep -Seconds 5	
 	}
 }
@@ -909,20 +726,14 @@ $LastWarning = {
 # Well done
 $WellDone = {
 	& $Untreblelogo		
-	Write-Host "" -ForegroundColor Green -BackgroundColor White
-	Write-Host "Well done xD" -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nWell done xD" -ForegroundColor Green -BackgroundColor White
 	Start-Sleep -Seconds 5
 }
 	
 # Finish flash Stock-ROM
 $FinishStock = {
 	& $Nokialogo
-	Write-Host "" -ForegroundColor Green -BackgroundColor White
-	Write-Host "You are back to Stock ROM successfully." -ForegroundColor Green -BackgroundColor White	
-	Write-Host "Your device will boot into the ROM now." -ForegroundColor Green -BackgroundColor White	
-	Write-Host "Enjoy your time travel to the ancient times xD" -ForegroundColor Green -BackgroundColor White
-	Write-Host "" -ForegroundColor Green -BackgroundColor White
-	Write-Host "You can unplug your device now :-)" -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nYou are back to Stock ROM successfully." -ForegroundColor Green -BackgroundColor White; Write-Host "Your device will boot into the ROM now." -ForegroundColor Green -BackgroundColor White; Write-Host "Enjoy your time travel to the ancient times xD" -ForegroundColor Green -BackgroundColor White; Write-Host "" -ForegroundColor Green -BackgroundColor White; Write-Host "You can unplug your device now :-)" -ForegroundColor Green -BackgroundColor White
 	Start-Sleep -Seconds 10
 	clear
 	# Hintergrundfarbe (F = Weiß)
@@ -937,11 +748,7 @@ $FinishStock = {
 # Finish flash GPT-Table
 $FinishGPT = {
 	& $Untreblelogo
-	Write-Host "" -ForegroundColor Green -BackgroundColor White
-	Write-Host "Partition-Table successfully flashed :-)" -ForegroundColor Green -BackgroundColor White	
-	Write-Host "" -ForegroundColor Red -BackgroundColor White
-	Write-Host "You need to flash a Stock-Firmware with NOST or OST LA to boot your device!!!" -ForegroundColor Red -BackgroundColor White	
-	Write-Host "I don't recommend using OSTRemote or it will brick your device :-(" -ForegroundColor Red -BackgroundColor White
+	Write-Host "`nPartition-Table successfully flashed :-)" -ForegroundColor Green -BackgroundColor White; Write-Host "`nYou need to flash a Stock-Firmware with NOST or OST LA to boot your device!!!" -ForegroundColor Red -BackgroundColor White; Write-Host "I don't recommend using OSTRemote or it will brick your device :-(" -ForegroundColor Red -BackgroundColor White
 	Start-Sleep -Seconds 10
 	clear
 	# Hintergrundfarbe (F = Weiß)
@@ -955,11 +762,9 @@ $FinishGPT = {
 
 # After Update
 $AfterUpdate = {
-    & $Untreblelogo
-    Write-Host "" -ForegroundColor Green -BackgroundColor White		
-	Write-Host "Update successfully :-)" -ForegroundColor Green -BackgroundColor White
-	Write-Host "" -ForegroundColor Green -BackgroundColor White
-	Write-Host "Untreble will restart now." -ForegroundColor Black -BackgroundColor White	
+    & $Untreblelogo		
+	Write-Host "`nUpdate successfully :-)" -ForegroundColor Green -BackgroundColor White
+	Write-Host "`nUntreble will restart now." -ForegroundColor Black -BackgroundColor White	
 	Start-Sleep -Seconds 5
 }
 	
